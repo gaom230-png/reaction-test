@@ -6,11 +6,7 @@
 <title>最近你有好好休息吗？</title>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
 font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
@@ -32,7 +28,6 @@ box-shadow:0 8px 24px rgba(0,0,0,.06);
 overflow:hidden;
 }
 
-/* language */
 .lang{
 width:100%;
 padding:10px 12px;
@@ -43,7 +38,6 @@ margin-bottom:12px;
 background:#fff;
 }
 
-/* top scrolling banner only */
 .liveWrap{
 background:#f7edd4;
 border-radius:16px;
@@ -57,7 +51,6 @@ white-space:nowrap;
 display:inline-block;
 font-size:15px;
 font-weight:800;
-color:#222;
 animation:marquee 18s linear infinite;
 padding-left:100%;
 }
@@ -67,7 +60,6 @@ from{transform:translateX(0);}
 to{transform:translateX(-100%);}
 }
 
-/* title */
 h1{
 font-size:30px;
 line-height:1.2;
@@ -84,7 +76,6 @@ font-weight:700;
 margin-bottom:12px;
 }
 
-/* stats */
 .stats{
 display:grid;
 grid-template-columns:repeat(3,1fr);
@@ -111,7 +102,6 @@ margin-top:4px;
 font-weight:700;
 }
 
-/* game */
 .gamebox{
 height:250px;
 background:#f2f3fa;
@@ -137,21 +127,23 @@ font-size:24px;
 font-weight:900;
 cursor:pointer;
 user-select:none;
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
 }
 
-.target.green{
-background:#17c97a;
-}
+.green{background:#17c97a;}
+.blue{background:#247cff;}
 
-.target.small{
+.small{
 width:88px;
 height:88px;
 border-radius:16px;
 font-size:18px;
-position:absolute;
+transform:none;
 }
 
-/* result */
 .result{
 text-align:center;
 margin-bottom:10px;
@@ -168,7 +160,6 @@ color:#666;
 margin:3px 0;
 }
 
-/* buttons */
 .btn{
 width:100%;
 border:none;
@@ -180,20 +171,8 @@ cursor:pointer;
 margin-top:8px;
 }
 
-.black{
-background:#000;
-color:#fff;
-}
-
-.gray{
-background:#eef0f5;
-color:#111;
-}
-
-@media(max-height:760px){
-.gamebox{height:220px;}
-h1{font-size:26px;}
-}
+.black{background:#000;color:#fff;}
+.gray{background:#eef0f5;color:#111;}
 </style>
 </head>
 
@@ -219,20 +198,9 @@ h1{font-size:26px;}
 <div class="sub">测测你的反应速度</div>
 
 <div class="stats">
-<div class="stat">
-<div class="num" id="level">1</div>
-<div class="label">关卡</div>
-</div>
-
-<div class="stat">
-<div class="num" id="score">0</div>
-<div class="label">积分</div>
-</div>
-
-<div class="stat">
-<div class="num" id="rank">--</div>
-<div class="label">全球排名</div>
-</div>
+<div class="stat"><div class="num" id="level">1</div><div class="label">关卡</div></div>
+<div class="stat"><div class="num" id="score">0</div><div class="label">积分</div></div>
+<div class="stat"><div class="num" id="rank">--</div><div class="label">全球排名</div></div>
 </div>
 
 <div class="gamebox" id="gamebox">
@@ -251,15 +219,16 @@ h1{font-size:26px;}
 </div>
 
 <script>
-let stage=1;
+let stage=0;
 let score=0;
 let ready=false;
 let startTime=0;
+let moveInterval=null;
 
 const target=document.getElementById("target");
 const gamebox=document.getElementById("gamebox");
 
-/* live challenger count */
+/* top live bar */
 function updateLive(){
 let n=28642+Math.floor(Math.random()*900);
 document.getElementById("liveTrack").innerHTML=
@@ -267,8 +236,10 @@ document.getElementById("liveTrack").innerHTML=
 }
 setInterval(updateLive,4000);
 
-/* restart */
+/* reset */
 function restartGame(){
+clearInterval(moveInterval);
+
 stage=1;
 score=0;
 ready=false;
@@ -280,60 +251,24 @@ document.getElementById("level").innerText="1";
 document.getElementById("result").innerHTML=
 "<h2>准备好了吗？</h2><p>等待变绿后立即点击</p>";
 
-level1();
-}
-
-/* level1 */
-function level1(){
 target.className="target";
 target.innerText="等待...";
-target.style.left="";
-target.style.top="";
-
-ready=false;
+target.style.left="50%";
+target.style.top="50%";
+target.style.transform="translate(-50%,-50%)";
 
 setTimeout(()=>{
 ready=true;
-target.classList.add("green");
+target.className="target green";
 target.innerText="点击!";
 startTime=Date.now();
 },1000+Math.random()*1500);
 }
 
-/* level2 */
-function level2(){
-target.className="target small green";
-target.innerText="点我";
-moveTarget();
-}
-
-function moveTarget(){
-let x=Math.random()*(gamebox.clientWidth-88);
-let y=Math.random()*(gamebox.clientHeight-88);
-
-target.style.left=x+"px";
-target.style.top=y+"px";
-}
-
-/* level3 */
-function level3(){
-let taps=0;
-target.className="target green";
-target.innerText="连点5次";
-target.style.left="";
-target.style.top="";
-
+/* click handler */
 target.onclick=function(){
-taps++;
-if(taps>=5){
-finishGame();
-}
-};
-}
 
-/* click logic */
-target.addEventListener("click",function(){
-
+/* Level 1 */
 if(stage===1 && ready){
 let rt=Date.now()-startTime;
 score=Math.max(100,420-rt);
@@ -344,29 +279,76 @@ document.getElementById("result").innerHTML=
 "<h2>第一关完成</h2><p>"+rt+" ms</p>";
 
 stage=2;
-setTimeout(level2,500);
+level2();
 return;
 }
 
+/* Level 2 */
 if(stage===2){
-score+=180;
+clearInterval(moveInterval);
 
+score+=180;
 document.getElementById("score").innerText=score;
 document.getElementById("level").innerText="3";
 document.getElementById("result").innerHTML=
 "<h2>第二关完成</h2><p>继续冲刺！</p>";
 
 stage=3;
-setTimeout(level3,500);
+level3();
 return;
 }
 
-});
+/* Level 3 */
+if(stage===3){
+tapCount++;
+target.innerText="连点"+(5-tapCount)+"次";
 
-/* finish */
+if(tapCount>=5){
+finishGame();
+}
+return;
+}
+
+/* Replay */
+if(stage===4){
+restartGame();
+}
+};
+
+function level2(){
+target.className="target small blue";
+target.innerText="抓我";
+
+moveInterval=setInterval(()=>{
+let maxX=gamebox.clientWidth-88;
+let maxY=gamebox.clientHeight-88;
+
+target.style.left=Math.random()*maxX+"px";
+target.style.top=Math.random()*maxY+"px";
+target.style.transform="none";
+},450);
+}
+
+let tapCount=0;
+
+function level3(){
+clearInterval(moveInterval);
+
+tapCount=0;
+target.className="target green";
+target.style.width="120px";
+target.style.height="120px";
+target.style.borderRadius="20px";
+target.style.left="50%";
+target.style.top="50%";
+target.style.transform="translate(-50%,-50%)";
+target.innerText="连点5次";
+}
+
 function finishGame(){
-score+=220;
+stage=4;
 
+score+=220;
 document.getElementById("score").innerText=score;
 
 let rank="前50%";
@@ -383,7 +365,9 @@ document.getElementById("result").innerHTML=
 
 target.className="target";
 target.innerText="再来一次";
-target.onclick=restartGame;
+target.style.left="50%";
+target.style.top="50%";
+target.style.transform="translate(-50%,-50%)";
 }
 </script>
 
