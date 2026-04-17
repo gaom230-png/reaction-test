@@ -6,7 +6,12 @@
 <title>Reaction Challenge</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
 body{
 font-family:Arial,Helvetica,sans-serif;
 background:linear-gradient(135deg,#eef1ff,#f6f7ff);
@@ -35,30 +40,31 @@ margin-bottom:18px;
 
 h1{
 text-align:center;
-font-size:clamp(34px,8vw,60px);
+font-size:clamp(26px,6vw,46px);
 margin-bottom:8px;
 font-weight:900;
+line-height:1.15;
 }
 
 .sub{
 text-align:center;
-font-size:clamp(18px,4vw,28px);
+font-size:clamp(15px,3vw,24px);
 color:#777;
-margin-bottom:20px;
+margin-bottom:18px;
 font-weight:700;
 }
 
 .banner{
-padding:16px;
+padding:14px;
 border-radius:18px;
 text-align:center;
-font-size:clamp(18px,4vw,28px);
+font-size:clamp(16px,3.5vw,24px);
 font-weight:900;
-margin-bottom:14px;
+margin-bottom:12px;
 }
 
-.b1{background:#f7edd4}
-.b2{background:#dfe9f8}
+.b1{background:#f7edd4;}
+.b2{background:#dfe9f8;}
 
 .stats{
 display:grid;
@@ -75,13 +81,13 @@ text-align:center;
 }
 
 .num{
-font-size:clamp(28px,7vw,54px);
+font-size:clamp(24px,5vw,42px);
 font-weight:900;
 }
 
 .label{
-margin-top:8px;
-font-size:clamp(15px,3vw,26px);
+margin-top:6px;
+font-size:clamp(14px,2.5vw,20px);
 color:#666;
 font-weight:800;
 }
@@ -103,34 +109,35 @@ margin-bottom:18px;
 background:#ff4d57;
 color:#fff;
 border:none;
-padding:22px 34px;
-font-size:clamp(24px,6vw,46px);
+padding:18px 28px;
+font-size:clamp(20px,4vw,32px);
 font-weight:900;
-border-radius:22px;
+border-radius:20px;
 cursor:pointer;
 }
 
-.green{background:#16c47f}
-.blue{background:#247cff}
+.green{background:#16c47f;}
+.blue{background:#247cff;}
+
 .black{
 background:#000;
 color:#fff;
 padding:18px;
+border:none;
 border-radius:18px;
-font-size:28px;
+font-size:24px;
 font-weight:900;
 width:100%;
-border:none;
-margin-top:10px;
 cursor:pointer;
+margin-top:10px;
 }
 
 .result{
 text-align:center;
-padding:8px;
-font-size:clamp(20px,5vw,40px);
+font-size:clamp(18px,4vw,32px);
 font-weight:900;
 line-height:1.5;
+margin-bottom:10px;
 }
 
 .moveBox{
@@ -157,13 +164,31 @@ background:#eef1ff;
 padding:16px;
 border-radius:18px;
 text-align:center;
+font-size:20px;
 font-weight:800;
-font-size:22px;
 }
 
+@media(max-width:480px){
+.wrap{padding:14px;}
+.stats{gap:8px;}
+.card{padding:12px;}
+.game{
+height:72vw;
+min-height:280px;
+}
+.black{
+font-size:20px;
+padding:16px;
+}
+.share{
+font-size:18px;
+}
+}
 </style>
 </head>
+
 <body>
+
 <div class="wrap">
 
 <select id="lang" onchange="setLang()">
@@ -181,18 +206,29 @@ font-size:22px;
 <div class="banner b2" id="feed2">⚡ 你能进入前10%吗？</div>
 
 <div class="stats">
-<div class="card"><div class="num" id="levelNum">1</div><div class="label" id="levelText">关卡</div></div>
-<div class="card"><div class="num" id="scoreNum">0</div><div class="label" id="scoreText">积分</div></div>
-<div class="card"><div class="num" id="rankNum">--</div><div class="label" id="rankText">全球排名</div></div>
+<div class="card">
+<div class="num" id="levelNum">1</div>
+<div class="label" id="levelText">关卡</div>
+</div>
+
+<div class="card">
+<div class="num" id="scoreNum">0</div>
+<div class="label" id="scoreText">积分</div>
+</div>
+
+<div class="card">
+<div class="num" id="rankNum">--</div>
+<div class="label" id="rankText">全球排名</div>
+</div>
 </div>
 
 <div class="game" id="game">
-<button class="btn" onclick="startGame()" id="mainBtn">立即测试</button>
+<button class="btn" id="mainBtn" onclick="startGame()">立即测试</button>
 </div>
 
 <div class="result" id="result">准备好了吗？</div>
 
-<button class="black" onclick="startGame()" id="restart">开始挑战</button>
+<button class="black" id="restart" onclick="startGame()">开始挑战</button>
 
 <div class="share" id="share">发给朋友挑战</div>
 
@@ -203,35 +239,91 @@ let lang="cn";
 let level=1;
 let score=0;
 let startTime=0;
-let timer;
+let moveTimer=null;
 
 const text={
-cn:["最近休息够吗？","测测你的反应速度","立即测试","准备好了吗？","开始挑战","发给朋友挑战","关卡","积分","全球排名"],
-en:["Rested Enough Recently?","Test your reaction speed","Start","Ready?","Play Again","Challenge Friends","Level","Score","Global Rank"],
-hk:["最近休息夠嗎？","測試反應速度","立即開始","準備好未？","開始挑戰","Send畀朋友挑戰","關卡","分數","全球排名"],
-jp:["最近ちゃんと休めた？","反応速度テスト","スタート","準備OK？","再挑戦","友達に送る","レベル","スコア","世界順位"],
-kr:["요즘 충분히 쉬었나요?","반응속도 테스트","시작","준비됐나요?","다시 시작","친구에게 공유","레벨","점수","세계 순위"]
+cn:{
+title:"最近休息够吗？",
+sub:"测测你的反应速度",
+start:"立即测试",
+ready:"准备好了吗？",
+again:"开始挑战",
+share:"发给朋友挑战",
+level:"关卡",
+score:"积分",
+rank:"全球排名",
+feed1:"🔥 全球玩家正在挑战中",
+feed2:"⚡ 你能进入前10%吗？"
+},
+en:{
+title:"Rested Enough Recently?",
+sub:"Test your reaction speed",
+start:"Start Now",
+ready:"Ready?",
+again:"Play Again",
+share:"Challenge Friends",
+level:"Level",
+score:"Score",
+rank:"Global Rank",
+feed1:"🔥 Players worldwide are playing",
+feed2:"⚡ Can you reach Top 10%?"
+},
+hk:{
+title:"最近休息夠嗎？",
+sub:"測試你嘅反應速度",
+start:"立即開始",
+ready:"準備好未？",
+again:"開始挑戰",
+share:"Send畀朋友挑戰",
+level:"關卡",
+score:"分數",
+rank:"全球排名",
+feed1:"🔥 全球玩家挑戰中",
+feed2:"⚡ 你入到前10%嗎？"
+},
+jp:{
+title:"最近ちゃんと休めた？",
+sub:"反応速度をチェック",
+start:"スタート",
+ready:"準備OK？",
+again:"もう一回",
+share:"友達に送る",
+level:"レベル",
+score:"スコア",
+rank:"世界順位",
+feed1:"🔥 世界中で挑戦中",
+feed2:"⚡ 上位10%に入れる？"
+},
+kr:{
+title:"요즘 충분히 쉬었나요?",
+sub:"반응속도를 테스트하세요",
+start:"시작",
+ready:"준비됐나요?",
+again:"다시 시작",
+share:"친구에게 공유",
+level:"레벨",
+score:"점수",
+rank:"세계 순위",
+feed1:"🔥 전 세계 플레이 중",
+feed2:"⚡ 상위 10% 가능?"
+}
 };
 
 function setLang(){
 lang=document.getElementById("lang").value;
 const t=text[lang];
-title.innerText=t[0];
-sub.innerText=t[1];
-mainBtn.innerText=t[2];
-result.innerText=t[3];
-restart.innerText=t[4];
-share.innerText=t[5];
-levelText.innerText=t[6];
-scoreText.innerText=t[7];
-rankText.innerText=t[8];
-}
 
-function startGame(){
-level=1;
-score=0;
-updateUI();
-level1();
+title.innerText=t.title;
+sub.innerText=t.sub;
+mainBtn.innerText=t.start;
+result.innerText=t.ready;
+restart.innerText=t.again;
+share.innerText=t.share;
+levelText.innerText=t.level;
+scoreText.innerText=t.score;
+rankText.innerText=t.rank;
+feed1.innerText=t.feed1;
+feed2.innerText=t.feed2;
 }
 
 function updateUI(){
@@ -239,21 +331,35 @@ levelNum.innerText=level;
 scoreNum.innerText=score;
 }
 
+function startGame(){
+clearInterval(moveTimer);
+level=1;
+score=0;
+rankNum.innerText="--";
+updateUI();
+result.innerText="...";
+level1();
+}
+
 function level1(){
 game.innerHTML='<button class="btn" id="waitBtn">...</button>';
+
 let delay=Math.random()*2500+1000;
+
 setTimeout(()=>{
-let b=document.getElementById("waitBtn");
-if(!b)return;
-b.className="btn green";
-b.innerText="CLICK!";
+let btn=document.getElementById("waitBtn");
+if(!btn)return;
+
+btn.className="btn green";
+btn.innerText="CLICK!";
 startTime=Date.now();
-b.onclick=()=>{
+
+btn.onclick=()=>{
 let rt=Date.now()-startTime;
-score+=Math.max(0,300-rt);
+score+=Math.max(50,350-rt);
 level=2;
 updateUI();
-result.innerText="Level1: "+rt+" ms";
+result.innerText="Level 1: "+rt+" ms";
 level2();
 };
 },delay);
@@ -261,61 +367,66 @@ level2();
 
 function level2(){
 setTimeout(()=>{
-game.innerHTML='';
+game.innerHTML="";
 let box=document.createElement("div");
 box.className="moveBox";
 game.appendChild(box);
 
-let gx=game.clientWidth-90;
-let gy=game.clientHeight-90;
+const maxX=game.clientWidth-90;
+const maxY=game.clientHeight-90;
 
-timer=setInterval(()=>{
-box.style.left=Math.random()*gx+"px";
-box.style.top=Math.random()*gy+"px";
+moveTimer=setInterval(()=>{
+box.style.left=Math.random()*maxX+"px";
+box.style.top=Math.random()*maxY+"px";
 },500);
 
 box.onclick=()=>{
-clearInterval(timer);
+clearInterval(moveTimer);
 score+=250;
 level=3;
 updateUI();
 result.innerText="Level 2 Clear!";
 level3();
 };
-},900);
+},800);
 }
 
 function level3(){
 setTimeout(()=>{
-game.innerHTML='';
+game.innerHTML="";
 let dot=document.createElement("div");
 dot.className="smallDot";
 game.appendChild(dot);
 
-let gx=game.clientWidth-58;
-let gy=game.clientHeight-58;
-dot.style.left=Math.random()*gx+"px";
-dot.style.top=Math.random()*gy+"px";
+const maxX=game.clientWidth-58;
+const maxY=game.clientHeight-58;
+
+dot.style.left=Math.random()*maxX+"px";
+dot.style.top=Math.random()*maxY+"px";
 
 startTime=Date.now();
 
 dot.onclick=()=>{
 let rt=Date.now()-startTime;
-score+=Math.max(100,400-rt);
-finish();
+score+=Math.max(100,420-rt);
+finishGame();
 };
-},800);
+},700);
 }
 
-function finish(){
+function finishGame(){
 let rank=Math.max(1,Math.floor(100000/(score+10)));
 let beat=Math.min(99,Math.floor(score/8));
+
 rankNum.innerText="#"+rank;
+
 game.innerHTML='<button class="btn blue" onclick="startGame()">再来一次</button>';
+
 result.innerHTML="🏆 通关成功<br>积分："+score+"<br>击败全球 "+beat+"% 玩家";
 }
 
 setLang();
 </script>
+
 </body>
 </html>
