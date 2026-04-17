@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>⚡ 手速闯关挑战</title>
+<title>最近休息够吗？测测你的反应速度</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{
-font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Noto Sans KR","Hiragino Sans",sans-serif;
 background:linear-gradient(135deg,#f8f9ff,#eef2ff);
 padding:16px;
 display:flex;
@@ -18,61 +18,100 @@ min-height:100vh;
 width:100%;
 max-width:430px;
 background:#fff;
-border-radius:26px;
+border-radius:28px;
 padding:18px;
 box-shadow:0 20px 50px rgba(0,0,0,.08);
-position:relative;
 }
-.lang{
-position:absolute;top:16px;right:16px;
-border:none;background:#111;color:#fff;
-padding:8px 14px;border-radius:999px;
-font-weight:800;cursor:pointer;
+select{
+width:100%;
+padding:12px;
+border-radius:14px;
+border:1px solid #ddd;
+font-size:16px;
+font-weight:800;
+margin-bottom:14px;
+background:#fff;
 }
 .title{
-font-size:28px;font-weight:900;text-align:center;margin-top:10px;
+font-size:30px;
+font-weight:900;
+line-height:1.25;
+text-align:center;
+margin-bottom:8px;
 }
 .sub{
-text-align:center;color:#666;font-size:14px;margin:8px 0 14px;
+font-size:14px;
+color:#666;
+text-align:center;
+line-height:1.6;
+margin-bottom:14px;
+}
+.live{
+background:#fff7e6;
+padding:10px;
+border-radius:14px;
+text-align:center;
+font-size:13px;
+font-weight:900;
+margin-bottom:12px;
+}
+.feed{
+background:#eef7ff;
+padding:10px;
+border-radius:14px;
+text-align:center;
+font-size:13px;
+font-weight:800;
+margin-bottom:14px;
+min-height:40px;
 }
 .stats{
-display:flex;gap:10px;margin-bottom:14px;
+display:flex;
+gap:10px;
+margin-bottom:14px;
 }
 .box{
-flex:1;background:#f5f6ff;border-radius:14px;
-padding:10px;text-align:center;
+flex:1;
+background:#f5f6ff;
+padding:10px;
+border-radius:14px;
+text-align:center;
 }
 .num{font-size:22px;font-weight:900}
 .lab{font-size:12px;color:#666;margin-top:4px}
 #arena{
-height:330px;
+height:320px;
+background:#f5f7ff;
 border-radius:22px;
-background:#f4f6ff;
 position:relative;
 overflow:hidden;
 display:flex;
 justify-content:center;
 align-items:center;
-text-align:center;
 padding:20px;
+text-align:center;
 }
 .centerBtn{
-background:#ff4d4f;color:#fff;border:none;
-padding:18px 26px;border-radius:18px;
-font-size:24px;font-weight:900;
+background:#ff4d4f;
+color:#fff;
+border:none;
+padding:18px 24px;
+border-radius:18px;
+font-size:24px;
+font-weight:900;
 cursor:pointer;
 }
 .target{
 position:absolute;
-width:70px;height:70px;
+width:72px;height:72px;
 border-radius:16px;
-background:#10b981;
 display:flex;
 justify-content:center;
 align-items:center;
-color:#fff;
 font-weight:900;
+color:#fff;
 cursor:pointer;
+background:#10b981;
 }
 .fake{background:#ff4d4f}
 #msg{
@@ -86,19 +125,28 @@ margin-top:8px;
 text-align:center;
 color:#666;
 line-height:1.6;
-min-height:46px;
+min-height:48px;
 }
 .btns{
-display:grid;gap:10px;margin-top:16px;
+display:grid;
+gap:10px;
+margin-top:16px;
 }
 button.action{
-border:none;padding:14px;border-radius:14px;
-font-size:16px;font-weight:900;cursor:pointer;
+border:none;
+padding:14px;
+border-radius:14px;
+font-size:16px;
+font-weight:900;
+cursor:pointer;
 }
 .main{background:#111;color:#fff}
 .sec{background:#eef1ff}
 .tip{
-margin-top:12px;text-align:center;font-size:12px;color:#999;
+margin-top:12px;
+text-align:center;
+font-size:12px;
+color:#999;
 }
 </style>
 </head>
@@ -106,76 +154,107 @@ margin-top:12px;text-align:center;font-size:12px;color:#999;
 
 <div class="wrap">
 
-<button class="lang" onclick="toggleLang()" id="langBtn">EN</button>
+<select id="langSelect" onchange="changeLang()">
+<option value="zh">中文（简体）</option>
+<option value="yue">粵語</option>
+<option value="en">English</option>
+<option value="ko">한국어</option>
+<option value="ja">日本語</option>
+</select>
 
-<div class="title" id="title">⚡ 手速闯关挑战</div>
-<div class="sub" id="sub">你能通过3关吗？</div>
+<div class="title" id="title">最近休息够吗？</div>
+<div class="sub" id="sub">测测你的反应速度 · 全球玩家正在挑战中</div>
+
+<div class="live" id="live">🔥 今日已有 28,431 人挑战</div>
+
+<div class="feed" id="feed">🔥 上海用户刚通关第3关</div>
 
 <div class="stats">
 <div class="box">
-<div class="num" id="levelNum">1</div>
-<div class="lab" id="lab1">当前关卡</div>
+<div class="num" id="lv">1</div>
+<div class="lab" id="lab1">关卡</div>
 </div>
 <div class="box">
-<div class="num" id="scoreNum">0</div>
+<div class="num" id="sc">0</div>
 <div class="lab" id="lab2">积分</div>
 </div>
 <div class="box">
-<div class="num" id="bestNum">1</div>
-<div class="lab" id="lab3">最高关卡</div>
+<div class="num" id="rk">--</div>
+<div class="lab" id="lab3">全球排名</div>
 </div>
 </div>
 
 <div id="arena">
-<button class="centerBtn" onclick="startGame()" id="startBtn">开始挑战</button>
+<button class="centerBtn" onclick="startGame()" id="startBtn">立即测试</button>
 </div>
 
 <div id="msg">准备好了吗？</div>
 <div id="desc">很多人卡在第二关 😏</div>
 
 <div class="btns">
-<button class="action main" onclick="startGame()" id="restartBtn">重新开始</button>
-<button class="action sec" onclick="shareGame()" id="shareBtn">发给朋友挑战</button>
+<button class="action main" onclick="startGame()" id="restartBtn">重新测试</button>
+<button class="action sec" onclick="shareGame()" id="shareBtn">发给朋友测试</button>
 </div>
 
-<div class="tip" id="tip">通关后记得截图炫耀 👀</div>
+<div class="tip" id="tip">反应速度可能受睡眠、压力、疲劳影响</div>
 
 </div>
 
 <script>
-let lang=navigator.language.startsWith("zh")?"zh":"en";
-let level=1;
-let score=0;
-let best=localStorage.getItem("v5best")||1;
-let timer=null;
-let moveTimer=null;
+let lang="zh";
+let level=1,score=0,timer=null,moveTimer=null;
+let players=28431;
 
 const T={
 zh:{
-title:"⚡ 手速闯关挑战",
-sub:"你能通过3关吗？",
-l1:"当前关卡",l2:"积分",l3:"最高关卡",
-start:"开始挑战",restart:"重新开始",
-share:"发给朋友挑战",
-ready:"准备好了吗？",
-d:"很多人卡在第二关 😏",
-tip:"通关后记得截图炫耀 👀",
-pass:"过关！",
-fail:"失败了",
-shareText:"⚡ 我闯到第"
+title:"最近休息够吗？",
+sub:"测测你的反应速度 · 全球玩家正在挑战中",
+l1:"关卡",l2:"积分",l3:"全球排名",
+start:"立即测试",restart:"重新测试",share:"发给朋友测试",
+ready:"准备好了吗？",desc:"很多人卡在第二关 😏",
+tip:"反应速度可能受睡眠、压力、疲劳影响",
+live:"🔥 今日已有 ",live2:" 人挑战",
+copy:"已复制分享文案"
+},
+yue:{
+title:"最近休息夠嗎？",
+sub:"測測你嘅反應速度 · 全球玩家挑戰中",
+l1:"關卡",l2:"分數",l3:"全球排名",
+start:"立即測試",restart:"重新測試",share:"發俾朋友測試",
+ready:"準備好未？",desc:"好多人卡喺第二關 😏",
+tip:"反應速度可能受睡眠、壓力、疲勞影響",
+live:"🔥 今日已有 ",live2:" 人挑戰",
+copy:"已複製分享內容"
 },
 en:{
-title:"⚡ Speed Challenge",
-sub:"Can you beat all 3 levels?",
-l1:"Level",l2:"Score",l3:"Best",
-start:"Start",restart:"Restart",
-share:"Challenge Friends",
-ready:"Ready?",
-d:"Most people fail level 2 😏",
-tip:"Screenshot your win 👀",
-pass:"Passed!",
-fail:"Failed!",
-shareText:"⚡ I reached level "
+title:"Have You Rested Enough Recently?",
+sub:"Test Your Reaction Speed · Players Worldwide Competing",
+l1:"Level",l2:"Score",l3:"Global Rank",
+start:"Test Now",restart:"Retry Test",share:"Share Test",
+ready:"Ready?",desc:"Most fail level 2 😏",
+tip:"Reaction speed may be affected by sleep, stress, fatigue",
+live:"🔥 Today ",live2:" players joined",
+copy:"Copied!"
+},
+ko:{
+title:"최근 충분히 쉬었나요?",
+sub:"반응 속도를 테스트해보세요 · 전 세계 유저 참여 중",
+l1:"레벨",l2:"점수",l3:"세계 랭킹",
+start:"지금 테스트",restart:"다시 테스트",share:"친구에게 공유",
+ready:"준비됐나요?",desc:"대부분 2단계 실패 😏",
+tip:"반응 속도는 수면·스트레스·피로의 영향을 받을 수 있습니다",
+live:"🔥 오늘 ",live2:"명 도전",
+copy:"복사되었습니다!"
+},
+ja:{
+title:"最近ちゃんと休めていますか？",
+sub:"反応速度をテストしよう · 世界中で挑戦中",
+l1:"レベル",l2:"スコア",l3:"世界順位",
+start:"今すぐテスト",restart:"再テスト",share:"友達に共有",
+ready:"準備OK？",desc:"多くの人はレベル2で失敗 😏",
+tip:"反応速度は睡眠・ストレス・疲労の影響を受けます",
+live:"🔥 本日 ",live2:" 人が挑戦",
+copy:"コピーしました！"
 }
 };
 
@@ -190,93 +269,72 @@ startBtn.innerHTML=t.start;
 restartBtn.innerHTML=t.restart;
 shareBtn.innerHTML=t.share;
 msg.innerHTML=t.ready;
-desc.innerHTML=t.d;
+desc.innerHTML=t.desc;
 tip.innerHTML=t.tip;
-langBtn.innerHTML=lang=="zh"?"EN":"中文";
+live.innerHTML=t.live+players.toLocaleString()+t.live2;
+langSelect.value=lang;
 }
 
-function toggleLang(){
-lang=lang=="zh"?"en":"zh";
-applyLang();
+function changeLang(){lang=langSelect.value;applyLang();geoFeed();}
+function updateStats(){lv.innerHTML=level;sc.innerHTML=score;}
+
+function geoFeed(){
+const data={
+zh:["上海用户刚通关第3关","深圳用户获得612分","海外用户挑战失败","北京用户进入全球前10%"],
+yue:["香港用戶啱啱過第3關","廣州用戶攞到612分","海外用戶挑戰失敗","深圳用戶打入全球前10%"],
+en:["Local player cleared Level 3","Overseas player scored 612","Player failed Level 2","Player entered Global Top 10%"],
+ko:["현지 유저가 3단계 클리어","해외 유저가 612점 획득","플레이어가 2단계 실패","세계 상위 10% 진입"],
+ja:["現地ユーザーがレベル3クリア","海外ユーザーが612点獲得","プレイヤーがレベル2失敗","世界上位10%入り"]
+};
+let arr=data[lang];
+feed.innerHTML="🔥 "+arr[Math.floor(Math.random()*arr.length)];
 }
 
-function updateStats(){
-levelNum.innerHTML=level;
-scoreNum.innerHTML=score;
-bestNum.innerHTML=best;
-}
+function resetArena(){clearTimeout(timer);clearInterval(moveTimer);arena.innerHTML="";}
 
-function resetArena(){
-clearTimeout(timer);
-clearInterval(moveTimer);
-arena.innerHTML="";
-}
+function startGame(){level=1;score=0;updateStats();run1();}
 
-function startGame(){
-level=1;
-score=0;
-updateStats();
-runLevel1();
-}
-
-function runLevel1(){
+function run1(){
 resetArena();
-msg.innerHTML=lang=="zh"?"第一关":"Level 1";
-desc.innerHTML=lang=="zh"?"等变绿后立刻点击":"Tap when green";
-
-let btn=document.createElement("button");
-btn.className="centerBtn";
-btn.innerHTML=lang=="zh"?"等待...":"Wait...";
-arena.appendChild(btn);
+let b=document.createElement("button");
+b.className="centerBtn";
+b.innerHTML="...";
+arena.appendChild(b);
 
 timer=setTimeout(()=>{
-btn.style.background="#10b981";
-btn.innerHTML=lang=="zh"?"快点我！":"TAP!";
+b.style.background="#10b981";
+b.innerHTML="TAP!";
 let st=Date.now();
-
-btn.onclick=()=>{
-let ms=Date.now()-st;
-score+=Math.max(50,500-ms);
-level=2;
-updateStats();
-setTimeout(runLevel2,300);
+b.onclick=()=>{
+score+=Math.max(50,500-(Date.now()-st));
+level=2;updateStats();setTimeout(run2,300);
 };
 },1500+Math.random()*2000);
 }
 
-function runLevel2(){
+function run2(){
 resetArena();
-msg.innerHTML=lang=="zh"?"第二关":"Level 2";
-desc.innerHTML=lang=="zh"?"点击移动方块":"Tap moving target";
+let t=document.createElement("div");
+t.className="target";
+t.innerHTML="GO";
+arena.appendChild(t);
 
-let box=document.createElement("div");
-box.className="target";
-box.innerHTML="GO";
-arena.appendChild(box);
-
-function move(){
-let x=Math.random()*300;
-let y=Math.random()*240;
-box.style.left=x+"px";
-box.style.top=y+"px";
+function mv(){
+t.style.left=Math.random()*300+"px";
+t.style.top=Math.random()*220+"px";
 }
-move();
-moveTimer=setInterval(move,700);
+mv();
+moveTimer=setInterval(mv,700);
 
-box.onclick=()=>{
+t.onclick=()=>{
 clearInterval(moveTimer);
 score+=200;
-level=3;
-updateStats();
-setTimeout(runLevel3,300);
+level=3;updateStats();setTimeout(run3,300);
 };
 }
 
-function runLevel3(){
+function run3(){
 resetArena();
-msg.innerHTML=lang=="zh"?"第三关":"Level 3";
-desc.innerHTML=lang=="zh"?"找出绿色目标":"Find green target";
-
 for(let i=0;i<3;i++){
 let b=document.createElement("div");
 b.className="target "+(i==1?"":"fake");
@@ -284,74 +342,69 @@ b.style.left=(30+i*110)+"px";
 b.style.top="120px";
 b.innerHTML="?";
 arena.appendChild(b);
-
-b.onclick=()=>{
-if(i==1){
-score+=300;
-winGame();
-}else{
-loseGame();
-}
-};
+b.onclick=()=>{i==1?winGame():loseGame();}
 }
 }
 
 function winGame(){
 resetArena();
-msg.innerHTML="🏆 "+(lang=="zh"?"通关成功":"YOU WIN");
-desc.innerHTML=lang=="zh"?
-"积分："+score+"<br>你是真正的高手":
-"Score: "+score+"<br>You are elite";
+let beat=Math.floor(88+Math.random()*11);
+let top=100-beat;
 
-if(level>best){
-best=level;
-localStorage.setItem("v5best",best);
+rk.innerHTML=(lang=="zh"||lang=="yue")?"前"+top+"%":
+(lang=="ko")?"상위 "+top+"%":
+(lang=="ja")?"上位"+top+"%":"Top "+top+"%";
+
+msg.innerHTML="🏆";
+
+if(lang=="zh"||lang=="yue"){
+desc.innerHTML="你击败了全球"+beat+"%玩家";
+}else{
+desc.innerHTML="You beat "+beat+"% of players";
 }
-updateStats();
 
-let btn=document.createElement("button");
-btn.className="centerBtn";
-btn.style.background="#10b981";
-btn.innerHTML=lang=="zh"?"再来一次":"Play Again";
-btn.onclick=startGame;
-arena.appendChild(btn);
+let b=document.createElement("button");
+b.className="centerBtn";
+b.style.background="#10b981";
+b.innerHTML=startBtn.innerHTML;
+b.onclick=startGame;
+arena.appendChild(b);
 }
 
 function loseGame(){
 resetArena();
-msg.innerHTML="❌ "+(lang=="zh"?"挑战失败":"FAILED");
-desc.innerHTML=lang=="zh"?
-"止步第 "+level+" 关<br>再试一次":
-"Stopped at level "+level+"<br>Try again";
+msg.innerHTML="❌";
+desc.innerHTML=(lang=="zh"||lang=="yue")?"再试一次":"Try again";
 
-if(level>best){
-best=level;
-localStorage.setItem("v5best",best);
-}
-updateStats();
-
-let btn=document.createElement("button");
-btn.className="centerBtn";
-btn.innerHTML=lang=="zh"?"重新挑战":"Retry";
-btn.onclick=startGame;
-arena.appendChild(btn);
+let b=document.createElement("button");
+b.className="centerBtn";
+b.innerHTML=restartBtn.innerHTML;
+b.onclick=startGame;
+arena.appendChild(b);
 }
 
 function shareGame(){
-let txt=lang=="zh"?
-T.zh.shareText+level+"关，你能超过我吗？ "+location.href:
-T.en.shareText+level+". Can you beat me? "+location.href;
+let txt=(lang=="zh"||lang=="yue")?
+"最近休息够吗？我刚击败全球玩家，来测测你自己！ "+location.href:
+"Have you rested enough recently? I just beat players worldwide. Test yourself! "+location.href;
 
 if(navigator.share){
-navigator.share({title:"Speed Challenge",text:txt,url:location.href});
+navigator.share({title:document.title,text:txt,url:location.href});
 }else{
 navigator.clipboard.writeText(txt);
-alert(lang=="zh"?"已复制分享文案":"Copied!");
+alert(T[lang].copy);
 }
 }
+
+setInterval(()=>{
+players+=Math.floor(Math.random()*7)+1;
+applyLang();
+geoFeed();
+},3000);
 
 applyLang();
 updateStats();
+geoFeed();
 </script>
 
 </body>
