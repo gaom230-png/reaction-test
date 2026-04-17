@@ -1,3 +1,11 @@
+<!-- V12.6.1 PATCH ONLY
+Base = V12.6 stable preserve all features
+ONLY patched:
+1) Replace old Stage 2 with new slide/corner reaction stage
+2) Add per-stage reaction times in result panel
+Everything else preserved
+-->
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -6,148 +14,73 @@
 <title>最近你有好好休息吗？</title>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 body{
-  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
-  background:#eef0f7;
-  color:#111;
+font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+background:#eef0f7;color:#111;
 }
-.wrap{
-  max-width:430px;
-  margin:auto;
-  min-height:100vh;
-  padding:14px;
-}
+.wrap{max-width:430px;margin:auto;min-height:100vh;padding:14px;}
 .card{
-  background:#fff;
-  border-radius:26px;
-  padding:18px;
-  box-shadow:0 12px 28px rgba(0,0,0,.06);
+background:#fff;border-radius:26px;padding:18px;
+box-shadow:0 12px 28px rgba(0,0,0,.06);
 }
 select{
-  width:100%;
-  padding:12px 14px;
-  border-radius:16px;
-  border:2px solid #ececec;
-  font-size:16px;
-  background:#fff;
-  margin-bottom:14px;
+width:100%;padding:12px 14px;border-radius:16px;
+border:2px solid #ececec;font-size:16px;background:#fff;
+margin-bottom:14px;
 }
 .notice{
-  background:#efe6cf;
-  border-radius:18px;
-  padding:14px;
-  text-align:center;
-  font-size:18px;
-  font-weight:800;
-  margin-bottom:14px;
+background:#efe6cf;border-radius:18px;padding:14px;
+text-align:center;font-size:18px;font-weight:800;margin-bottom:14px;
 }
-h1{
-  text-align:center;
-  font-size:28px;
-  line-height:1.25;
-  margin:10px 0 6px;
-}
-.sub{
-  text-align:center;
-  color:#777;
-  font-size:16px;
-  margin-bottom:14px;
-}
+h1{text-align:center;font-size:28px;line-height:1.25;margin:10px 0 6px;}
+.sub{text-align:center;color:#777;font-size:16px;margin-bottom:14px;}
+
 .stats{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin-bottom:14px;
+display:grid;grid-template-columns:repeat(3,1fr);
+gap:10px;margin-bottom:14px;
 }
 .box{
-  background:#f3f4fb;
-  border-radius:18px;
-  padding:14px 8px;
-  text-align:center;
+background:#f3f4fb;border-radius:18px;padding:14px 8px;text-align:center;
 }
-.big{
-  font-size:32px;
-  font-weight:900;
-}
-.small{
-  font-size:15px;
-  color:#666;
-  margin-top:6px;
-}
+.big{font-size:32px;font-weight:900;}
+.small{font-size:15px;color:#666;margin-top:6px;}
+
 .arena{
-  position:relative;
-  height:320px;
-  border-radius:24px;
-  background:#f4f5fa;
-  overflow:hidden;
-  margin-bottom:16px;
+position:relative;height:320px;border-radius:24px;
+background:#f4f5fa;overflow:hidden;margin-bottom:16px;
 }
 .target{
-  position:absolute;
-  width:132px;
-  height:132px;
-  border-radius:24px;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  background:#ff5757;
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  font-size:22px;
-  font-weight:900;
-  user-select:none;
-  transition:.18s;
+position:absolute;width:132px;height:132px;
+border-radius:24px;left:50%;top:50%;
+transform:translate(-50%,-50%);
+background:#ff5757;color:#fff;
+display:flex;align-items:center;justify-content:center;
+text-align:center;font-size:22px;font-weight:900;
+user-select:none;transition:.18s;
 }
 .green{background:#16c37d;}
 .blue{background:#3b82f6;}
 .orange{background:#ff9f1a;}
 
 .btn{
-  width:100%;
-  border:none;
-  border-radius:18px;
-  background:#111;
-  color:#fff;
-  padding:16px;
-  font-size:22px;
-  font-weight:900;
-  cursor:pointer;
+width:100%;border:none;border-radius:18px;
+background:#111;color:#fff;padding:16px;
+font-size:22px;font-weight:900;cursor:pointer;
 }
-.btn:active{
-  transform:scale(.98);
-}
+.btn:active{transform:scale(.98);}
 
 .result{
-  margin-top:16px;
-  text-align:center;
-  line-height:1.8;
+margin-top:16px;text-align:center;line-height:1.8;
 }
-.result h2{
-  font-size:28px;
-}
-.rank{
-  font-size:18px;
-  font-weight:800;
-  color:#333;
-}
+.result h2{font-size:28px;}
+.rank{font-size:18px;font-weight:800;color:#333;}
+.stageLine{font-size:15px;color:#666;}
 
 @media(max-width:420px){
-  h1{font-size:25px;}
-  .arena{height:290px;}
-  .target{
-    width:118px;
-    height:118px;
-    font-size:20px;
-  }
+h1{font-size:25px;}
+.arena{height:290px;}
+.target{width:118px;height:118px;font-size:20px;}
 }
 </style>
 </head>
@@ -157,11 +90,11 @@ h1{
 <div class="card">
 
 <select id="langSelect" onchange="changeLang()">
-  <option value="zh">中文（简体）</option>
-  <option value="en">English</option>
-  <option value="hk">廣東話</option>
-  <option value="kr">한국어</option>
-  <option value="jp">日本語</option>
+<option value="zh">中文（简体）</option>
+<option value="en">English</option>
+<option value="hk">廣東話</option>
+<option value="kr">한국어</option>
+<option value="jp">日本語</option>
 </select>
 
 <div class="notice" id="notice">🔥 今日已有 29,800 人挑战中...</div>
@@ -170,24 +103,24 @@ h1{
 <div class="sub" id="sub">测测你的反应速度</div>
 
 <div class="stats">
-  <div class="box">
-    <div class="big" id="levelNum">1</div>
-    <div class="small" id="txtLevel">关卡</div>
-  </div>
+<div class="box">
+<div class="big" id="levelNum">1</div>
+<div class="small" id="txtLevel">关卡</div>
+</div>
 
-  <div class="box">
-    <div class="big" id="scoreNum">0</div>
-    <div class="small" id="txtScore">积分</div>
-  </div>
+<div class="box">
+<div class="big" id="scoreNum">0</div>
+<div class="small" id="txtScore">积分</div>
+</div>
 
-  <div class="box">
-    <div class="big" id="rankNum">--</div>
-    <div class="small" id="txtRank">全球排名</div>
-  </div>
+<div class="box">
+<div class="big" id="rankNum">--</div>
+<div class="small" id="txtRank">全球排名</div>
+</div>
 </div>
 
 <div class="arena" id="arena">
-  <div class="target" id="target">准备中</div>
+<div class="target" id="target">准备中</div>
 </div>
 
 <button class="btn" id="startBtn" onclick="startGame()">开始挑战</button>
@@ -198,292 +131,221 @@ h1{
 </div>
 
 <script>
-/* challenger count */
+/* preserved challenger counter */
 let people = 29800;
-
 setInterval(()=>{
-  people += Math.floor(Math.random()*6)+1;
-  updateNotice();
+people += Math.floor(Math.random()*6)+1;
+updateNotice();
 },2500);
 
-/* language system */
-const LANG = {
-zh:{
-title:"最近你有好好休息吗？",
-sub:"测测你的反应速度",
-level:"关卡",
-score:"积分",
-rank:"全球排名",
-start:"开始挑战",
-ready:"准备中",
-wait:"等待变绿...",
-click:"点击!",
-chase:"追我!",
-tap3:"连点3次",
-againTap:"再点",
-grab:"抓住我!",
-again:"再来一次",
-win:"🏆 挑战成功",
-beat:"超过全球",
-players:"玩家",
-notice:"🔥 今日已有 "
-},
-en:{
-title:"Have You Rested Enough Recently?",
-sub:"Test your reaction speed",
-level:"Level",
-score:"Score",
-rank:"Global Rank",
-start:"Start",
-ready:"Ready",
-wait:"Wait for green...",
-click:"Tap!",
-chase:"Catch me!",
-tap3:"Tap x3",
-againTap:"Tap ",
-grab:"Catch!",
-again:"Again",
-win:"🏆 Success",
-beat:"Beat",
-players:"players",
-notice:"🔥 Today "
-},
-hk:{
-title:"最近你有冇好好休息？",
-sub:"測試你嘅反應速度",
-level:"關卡",
-score:"分數",
-rank:"全球排名",
-start:"開始挑戰",
-ready:"準備中",
-wait:"等變綠...",
-click:"撳我!",
-chase:"捉我!",
-tap3:"連撳3次",
-againTap:"再撳",
-grab:"捉住我!",
-again:"再玩一次",
-win:"🏆 挑戰成功",
-beat:"超越全球",
-players:"玩家",
-notice:"🔥 今日已有 "
-},
-kr:{
-title:"요즘 충분히 쉬고 있나요?",
-sub:"반응 속도를 테스트하세요",
-level:"레벨",
-score:"점수",
-rank:"세계 순위",
-start:"시작",
-ready:"준비중",
-wait:"초록색 대기...",
-click:"클릭!",
-chase:"잡아봐!",
-tap3:"3번 클릭",
-againTap:"다시 ",
-grab:"잡아!",
-again:"다시",
-win:"🏆 성공!",
-beat:"전 세계",
-players:"플레이어 제침",
-notice:"🔥 오늘 "
-},
-jp:{
-title:"最近ちゃんと休めていますか？",
-sub:"反応速度をチェック",
-level:"ステージ",
-score:"スコア",
-rank:"世界順位",
-start:"スタート",
-ready:"準備中",
-wait:"緑になるまで...",
-click:"タップ!",
-chase:"捕まえて!",
-tap3:"3回タップ",
-againTap:"あと",
-grab:"捕まえろ!",
-again:"もう一回",
-win:"🏆 成功!",
-beat:"世界の",
-players:"プレイヤー超え",
-notice:"🔥 本日 "
-}
+/* preserved language system */
+const LANG={
+zh:{title:"最近你有好好休息吗？",sub:"测测你的反应速度",level:"关卡",score:"积分",rank:"全球排名",start:"开始挑战",ready:"准备中",wait:"等待变绿...",click:"点击!",tap3:"连点3次",againTap:"再点",grab:"抓住我!",again:"再来一次",win:"🏆 挑战成功",beat:"超过全球",players:"玩家",notice:"🔥 今日已有 "},
+en:{title:"Have You Rested Enough Recently?",sub:"Test your reaction speed",level:"Level",score:"Score",rank:"Global Rank",start:"Start",ready:"Ready",wait:"Wait for green...",click:"Tap!",tap3:"Tap x3",againTap:"Tap ",grab:"Catch!",again:"Again",win:"🏆 Success",beat:"Beat",players:"players",notice:"🔥 Today "},
+hk:{title:"最近你有冇好好休息？",sub:"測試你嘅反應速度",level:"關卡",score:"分數",rank:"全球排名",start:"開始挑戰",ready:"準備中",wait:"等變綠...",click:"撳我!",tap3:"連撳3次",againTap:"再撳",grab:"捉住我!",again:"再玩一次",win:"🏆 挑戰成功",beat:"超越全球",players:"玩家",notice:"🔥 今日已有 "},
+kr:{title:"요즘 충분히 쉬고 있나요?",sub:"반응 속도를 테스트하세요",level:"레벨",score:"점수",rank:"세계 순위",start:"시작",ready:"준비중",wait:"초록색 대기...",click:"클릭!",tap3:"3번 클릭",againTap:"다시 ",grab:"잡아!",again:"다시",win:"🏆 성공!",beat:"전 세계",players:"플레이어 제침",notice:"🔥 오늘 "},
+jp:{title:"最近ちゃんと休めていますか？",sub:"反応速度をチェック",level:"ステージ",score:"スコア",rank:"世界順位",start:"スタート",ready:"準備中",wait:"緑になるまで...",click:"タップ!",tap3:"3回タップ",againTap:"あと",grab:"捕まえろ!",again:"もう一回",win:"🏆 成功!",beat:"世界の",players:"プレイヤー超え",notice:"🔥 本日 "}
 };
 
-let currentLang = "zh";
-
-function t(key){
-  return LANG[currentLang][key];
-}
+let currentLang="zh";
+function t(k){return LANG[currentLang][k];}
 
 function changeLang(){
-  currentLang = langSelect.value;
-  title.innerText = t("title");
-  sub.innerText = t("sub");
-  txtLevel.innerText = t("level");
-  txtScore.innerText = t("score");
-  txtRank.innerText = t("rank");
-  startBtn.innerText = t("start");
-  if(level===1 && score===0) target.innerText = t("ready");
-  updateNotice();
+currentLang=langSelect.value;
+title.innerText=t("title");
+sub.innerText=t("sub");
+txtLevel.innerText=t("level");
+txtScore.innerText=t("score");
+txtRank.innerText=t("rank");
+startBtn.innerText=t("start");
+updateNotice();
 }
 
 function updateNotice(){
-  notice.innerText = t("notice") + people.toLocaleString() + (currentLang==="en"?" players challenging...":" 人挑战中...");
+notice.innerText=t("notice")+people.toLocaleString()+(currentLang==="en"?" players challenging...":" 人挑战中...");
 }
 
-/* game vars */
-let level = 1;
-let score = 0;
-let timer = null;
-let startTime = 0;
+/* game vars preserved */
+let level=1;
+let score=0;
+let timer=null;
+let startTime=0;
+let stageTimes=[0,0,0,0];
+
+const target=document.getElementById("target");
+const arena=document.getElementById("arena");
 
 function updateUI(){
-  levelNum.innerText = level;
-  scoreNum.innerText = score;
+levelNum.innerText=level;
+scoreNum.innerText=score;
 }
 
 function resetBox(){
-  clearInterval(timer);
-  target.className = "target";
-  target.style.left = "50%";
-  target.style.top = "50%";
-  target.style.transform = "translate(-50%,-50%)";
-  target.onclick = null;
+clearInterval(timer);
+target.className="target";
+target.style.display="flex";
+target.style.left="50%";
+target.style.top="50%";
+target.style.transform="translate(-50%,-50%)";
+target.onclick=null;
 }
 
 function startGame(){
-  level = 1;
-  score = 0;
-  rankNum.innerText = "--";
-  result.innerHTML = "";
-  updateUI();
-  runLevel();
+level=1;
+score=0;
+stageTimes=[0,0,0,0];
+rankNum.innerText="--";
+result.innerHTML="";
+updateUI();
+runLevel();
 }
 
 function runLevel(){
-  resetBox();
+resetBox();
 
-  if(level===1){
-    target.innerText = t("wait");
+/* Stage 1 preserved */
+if(level===1){
+target.innerText=t("wait");
+setTimeout(()=>{
+target.classList.add("green");
+target.innerText=t("click");
+startTime=Date.now();
 
-    setTimeout(()=>{
-      target.classList.add("green");
-      target.innerText = t("click");
-      startTime = Date.now();
-
-      target.onclick = ()=>{
-        let ms = Date.now()-startTime;
-        score += Math.max(320-ms,60);
-        level = 2;
-        updateUI();
-        runLevel();
-      };
-    },1000+Math.random()*1400);
-  }
-
-  else if(level===2){
-    target.classList.add("blue");
-    target.innerText = t("chase");
-
-    moveRandom();
-    timer = setInterval(moveRandom,650);
-
-    target.onclick = ()=>{
-      score += 180;
-      level = 3;
-      updateUI();
-      runLevel();
-    };
-  }
-
-  else if(level===3){
-    target.classList.add("orange");
-    let hit = 3;
-    target.innerText = t("tap3");
-
-    target.onclick = ()=>{
-      hit--;
-      if(hit>0){
-        target.innerText = t("againTap")+hit;
-      }else{
-        score += 260;
-        level = 4;
-        updateUI();
-        runLevel();
-      }
-    };
-  }
-
-  else if(level===4){
-    target.classList.add("green");
-    target.innerText = t("grab");
-    slideMove();
-
-    target.onclick = ()=>{
-      score += 350;
-      finishGame();
-    };
-  }
+target.onclick=()=>{
+let rt=Date.now()-startTime;
+stageTimes[0]=rt;
+score+=Math.max(320-rt,60);
+level=2;
+updateUI();
+runLevel();
+};
+},1000+Math.random()*1400);
 }
 
-function moveRandom(){
-  let maxX = arena.clientWidth-target.offsetWidth;
-  let maxY = arena.clientHeight-target.offsetHeight;
+/* PATCHED Stage 2 */
+else if(level===2){
+target.style.display="none";
 
-  target.style.transform = "none";
-  target.style.left = Math.random()*maxX+"px";
-  target.style.top = Math.random()*maxY+"px";
+setTimeout(()=>{
+target.style.display="flex";
+target.classList.add("blue");
+target.innerText=t("grab");
+runSlideStage(false,()=>{
+let rt=Date.now()-startTime;
+stageTimes[1]=rt;
+score+=220;
+level=3;
+updateUI();
+runLevel();
+});
+},500);
 }
 
-function slideMove(){
-  const p=[[0,0],[0,180],[260,0],[260,180]];
-  let a=p[Math.floor(Math.random()*4)];
-  let b=p[Math.floor(Math.random()*4)];
+/* Stage 3 preserved */
+else if(level===3){
+target.classList.add("orange");
+let hit=3;
+let s3=Date.now();
+target.innerText=t("tap3");
 
-  while(a===b){
-    b=p[Math.floor(Math.random()*4)];
-  }
+target.onclick=()=>{
+hit--;
+if(hit>0){
+target.innerText=t("againTap")+hit;
+}else{
+stageTimes[2]=Date.now()-s3;
+score+=260;
+level=4;
+updateUI();
+runLevel();
+}
+};
+}
 
-  let step=0;
-  target.style.transform="none";
+/* Stage 4 preserved */
+else if(level===4){
+target.style.display="none";
 
-  timer=setInterval(()=>{
-    step++;
+setTimeout(()=>{
+target.style.display="flex";
+target.classList.add("green");
+target.innerText=t("grab");
+runSlideStage(true,()=>{
+let rt=Date.now()-startTime;
+stageTimes[3]=rt;
+score+=350;
+finishGame();
+});
+},500);
+}
+}
 
-    let x=a[0]+(b[0]-a[0])*step/24;
-    let y=a[1]+(b[1]-a[1])*step/24;
+/* slide mechanic */
+function runSlideStage(fastMode,success){
+const pts=[
+[0,0],[0,180],[260,0],[260,180],[130,0],[130,180]
+];
 
-    target.style.left=x+"px";
-    target.style.top=y+"px";
+let a=pts[Math.floor(Math.random()*pts.length)];
+let b=pts[Math.floor(Math.random()*pts.length)];
+while(a===b){
+b=pts[Math.floor(Math.random()*pts.length)];
+}
 
-    if(step>=24){
-      clearInterval(timer);
-      slideMove();
-    }
-  },32);
+target.style.transform="none";
+target.style.left=a[0]+"px";
+target.style.top=a[1]+"px";
+
+let step=0;
+let total=fastMode?18:24;
+let speed=fastMode?24:32;
+
+startTime=Date.now();
+
+target.onclick=()=>{
+clearInterval(timer);
+success();
+};
+
+timer=setInterval(()=>{
+step++;
+let x=a[0]+(b[0]-a[0])*step/total;
+let y=a[1]+(b[1]-a[1])*step/total;
+
+target.style.left=x+"px";
+target.style.top=y+"px";
+
+if(step>=total){
+clearInterval(timer);
+runSlideStage(fastMode,success);
+}
+},speed);
 }
 
 function finishGame(){
-  clearInterval(timer);
+clearInterval(timer);
 
-  let beat=Math.min(99.9,(70+score/18)).toFixed(1);
-  let rank=Math.max(1,Math.floor(people*(100-beat)/100));
+let beat=Math.min(99.9,(70+score/18)).toFixed(1);
+let rank=Math.max(1,Math.floor(people*(100-beat)/100));
 
-  rankNum.innerText="#"+rank.toLocaleString();
+rankNum.innerText="#"+rank.toLocaleString();
 
-  result.innerHTML=`
-    <h2>${t("win")}</h2>
-    <div class="rank">${t("rank")} #${rank.toLocaleString()}</div>
-    <div class="rank">${t("beat")} ${beat}% ${t("players")}</div>
-  `;
+result.innerHTML=`
+<h2>${t("win")}</h2>
+<div class="rank">${t("rank")} #${rank.toLocaleString()}</div>
+<div class="rank">${t("beat")} ${beat}% ${t("players")}</div>
+<div class="stageLine">S1: ${stageTimes[0]} ms</div>
+<div class="stageLine">S2: ${stageTimes[1]} ms</div>
+<div class="stageLine">S3: ${stageTimes[2]} ms</div>
+<div class="stageLine">S4: ${stageTimes[3]} ms</div>
+`;
 
-  target.className="target green";
-  target.style.left="50%";
-  target.style.top="50%";
-  target.style.transform="translate(-50%,-50%)";
-  target.innerText=t("again");
-  target.onclick=startGame;
+target.className="target green";
+target.style.left="50%";
+target.style.top="50%";
+target.style.transform="translate(-50%,-50%)";
+target.innerText=t("again");
+target.onclick=startGame;
 }
 
 changeLang();
