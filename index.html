@@ -1,180 +1,173 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>最近休息够吗？测试你的反应速度</title>
+<title>Reaction Challenge</title>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
-}
-
+*{margin:0;padding:0;box-sizing:border-box}
 body{
-background:linear-gradient(135deg,#eef1f8,#dde4f2);
-padding:16px;
+font-family:Arial,Helvetica,sans-serif;
+background:linear-gradient(135deg,#eef1ff,#f6f7ff);
 display:flex;
 justify-content:center;
+padding:12px;
 }
 
 .wrap{
 width:100%;
-max-width:760px;
+max-width:520px;
 background:#fff;
 border-radius:28px;
-padding:22px;
-box-shadow:0 20px 50px rgba(0,0,0,.08);
+padding:18px;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
 }
 
 select{
 width:100%;
 padding:14px;
 font-size:18px;
-font-weight:700;
-border:2px solid #eee;
-border-radius:18px;
-margin-bottom:20px;
+border-radius:16px;
+border:2px solid #ddd;
+margin-bottom:18px;
 }
 
 h1{
-font-size:clamp(34px,6vw,56px);
 text-align:center;
-font-weight:900;
+font-size:clamp(34px,8vw,60px);
 margin-bottom:8px;
-line-height:1.15;
+font-weight:900;
 }
 
 .sub{
 text-align:center;
-font-size:clamp(18px,3vw,28px);
+font-size:clamp(18px,4vw,28px);
 color:#777;
+margin-bottom:20px;
 font-weight:700;
-margin-bottom:18px;
 }
 
-.liveBox,.feedBox{
+.banner{
 padding:16px;
 border-radius:18px;
 text-align:center;
-font-weight:800;
-font-size:clamp(16px,3vw,28px);
+font-size:clamp(18px,4vw,28px);
+font-weight:900;
 margin-bottom:14px;
 }
 
-.liveBox{background:#f5ecd7;}
-.feedBox{background:#dfe9f6;}
+.b1{background:#f7edd4}
+.b2{background:#dfe9f8}
 
 .stats{
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:12px;
-margin:18px 0;
+margin-bottom:18px;
 }
 
 .card{
-background:#f1f2fa;
-border-radius:18px;
+background:#f2f3fb;
 padding:16px;
+border-radius:20px;
 text-align:center;
 }
 
-.big{
-font-size:clamp(28px,5vw,52px);
+.num{
+font-size:clamp(28px,7vw,54px);
 font-weight:900;
 }
 
-.small{
-font-size:clamp(14px,2vw,24px);
+.label{
 margin-top:8px;
+font-size:clamp(15px,3vw,26px);
 color:#666;
-font-weight:700;
+font-weight:800;
 }
 
 .game{
-height:420px;
-background:#eef0f6;
-border-radius:24px;
+height:min(62vw,420px);
+min-height:320px;
+background:#f3f4fb;
+border-radius:26px;
 position:relative;
 overflow:hidden;
 display:flex;
 justify-content:center;
 align-items:center;
+margin-bottom:18px;
 }
 
 .btn{
-background:#ff4d54;
+background:#ff4d57;
 color:#fff;
 border:none;
-padding:18px 34px;
-border-radius:22px;
-font-size:clamp(24px,4vw,42px);
+padding:22px 34px;
+font-size:clamp(24px,6vw,46px);
 font-weight:900;
+border-radius:22px;
 cursor:pointer;
 }
 
-.btnBlack{
-margin-top:18px;
-width:100%;
-padding:18px;
+.green{background:#16c47f}
+.blue{background:#247cff}
+.black{
 background:#000;
 color:#fff;
-border:none;
-border-radius:20px;
-font-size:clamp(20px,4vw,34px);
+padding:18px;
+border-radius:18px;
+font-size:28px;
 font-weight:900;
+width:100%;
+border:none;
+margin-top:10px;
 cursor:pointer;
 }
 
-.msg{
-margin-top:18px;
+.result{
 text-align:center;
-font-size:clamp(18px,3vw,28px);
-font-weight:800;
-line-height:1.6;
+padding:8px;
+font-size:clamp(20px,5vw,40px);
+font-weight:900;
+line-height:1.5;
 }
 
-.rank{
-color:#ff5d4d;
-font-size:clamp(22px,4vw,36px);
-font-weight:900;
+.moveBox{
+width:90px;
+height:90px;
+background:#247cff;
+position:absolute;
+border-radius:18px;
+cursor:pointer;
+}
+
+.smallDot{
+width:58px;
+height:58px;
+background:#16c47f;
+border-radius:50%;
+position:absolute;
+cursor:pointer;
 }
 
 .share{
 margin-top:14px;
-background:#eceef8;
-padding:18px;
+background:#eef1ff;
+padding:16px;
 border-radius:18px;
 text-align:center;
-font-size:clamp(16px,3vw,26px);
 font-weight:800;
-cursor:pointer;
+font-size:22px;
 }
 
-.target{
-position:absolute;
-width:88px;
-height:88px;
-background:#18c37d;
-border-radius:18px;
-display:none;
-cursor:pointer;
-}
-
-@media(max-width:560px){
-.game{height:360px;}
-.target{width:74px;height:74px;}
-}
 </style>
 </head>
-
 <body>
 <div class="wrap">
 
-<select id="lang">
-<option value="zh">中文（简体）</option>
+<select id="lang" onchange="setLang()">
+<option value="cn">中文（简体）</option>
 <option value="en">English</option>
 <option value="hk">廣東話</option>
 <option value="jp">日本語</option>
@@ -184,153 +177,145 @@ cursor:pointer;
 <h1 id="title">最近休息够吗？</h1>
 <div class="sub" id="sub">测测你的反应速度</div>
 
-<div class="liveBox" id="live">🔥 全球玩家正在挑战中</div>
-<div class="feedBox" id="feed">⚡ 你能进入前10%吗？</div>
+<div class="banner b1" id="feed1">🔥 全球玩家正在挑战中</div>
+<div class="banner b2" id="feed2">⚡ 你能进入前10%吗？</div>
 
 <div class="stats">
-<div class="card">
-<div class="big" id="level">1</div>
-<div class="small" id="levelText">关卡</div>
-</div>
-
-<div class="card">
-<div class="big" id="score">0</div>
-<div class="small" id="scoreText">积分</div>
-</div>
-
-<div class="card">
-<div class="big" id="rank">--</div>
-<div class="small" id="rankText">全球排名</div>
-</div>
+<div class="card"><div class="num" id="levelNum">1</div><div class="label" id="levelText">关卡</div></div>
+<div class="card"><div class="num" id="scoreNum">0</div><div class="label" id="scoreText">积分</div></div>
+<div class="card"><div class="num" id="rankNum">--</div><div class="label" id="rankText">全球排名</div></div>
 </div>
 
 <div class="game" id="game">
-<button class="btn" id="startBtn">立即测试</button>
-<div class="target" id="target"></div>
+<button class="btn" onclick="startGame()" id="mainBtn">立即测试</button>
 </div>
 
-<div class="msg" id="msg">准备好了吗？</div>
+<div class="result" id="result">准备好了吗？</div>
 
-<button class="btnBlack" onclick="resetGame()" id="resetBtn">重新开始</button>
+<button class="black" onclick="startGame()" id="restart">开始挑战</button>
 
-<div class="share" onclick="shareResult()" id="shareBtn">发给朋友挑战</div>
+<div class="share" id="share">发给朋友挑战</div>
 
 </div>
 
 <script>
+let lang="cn";
 let level=1;
 let score=0;
 let startTime=0;
-let maxLevel=5;
-let lang="zh";
-let feedIndex=0;
+let timer;
 
-const feeds={
-zh:["⚡ 你能进入前10%吗？","🏆 有人刚通过第3关","🔥 全球挑战持续进行中"],
-en:["⚡ Can you reach Top 10%?","🏆 Someone passed Level 3","🔥 Players worldwide are playing"],
-hk:["⚡ 你可唔可以入前10%？","🏆 有人啱啱過第3關","🔥 全球玩家挑戰中"],
-jp:["⚡ 上位10%に入れる？","🏆 誰かがレベル3突破","🔥 世界中で挑戦中"],
-kr:["⚡ 상위 10% 가능할까?","🏆 누군가 3단계 통과","🔥 전세계 도전중"]
-};
-
-setInterval(()=>{
-feedIndex=(feedIndex+1)%3;
-document.getElementById("feed").innerText=feeds[lang][feedIndex];
-},2500);
-
-document.getElementById("lang").onchange=function(){
-lang=this.value;
-updateLanguage();
-};
-
-function updateLanguage(){
 const text={
-zh:["最近休息够吗？","测测你的反应速度","🔥 全球玩家正在挑战中","关卡","积分","全球排名","立即测试","重新开始","发给朋友挑战","准备好了吗？"],
-en:["Rested enough lately?","Test your reaction speed","🔥 Players worldwide are challenging","Level","Score","Global Rank","Start Now","Restart","Challenge Friends","Ready?"],
-hk:["最近休息夠嗎？","測試你反應速度","🔥 全球玩家挑戰中","關卡","積分","全球排名","立即開始","重新開始","分享朋友挑戰","準備好未？"],
-jp:["最近ちゃんと休めた？","反応速度をテストしよう","🔥 世界中で挑戦中","レベル","得点","世界順位","スタート","やり直す","友達に送る","準備OK?"],
-kr:["요즘 충분히 쉬었나요?","반응속도를 테스트하세요","🔥 전세계 플레이어 도전중","레벨","점수","세계 순위","시작","다시 시작","친구에게 공유","준비됐나요?"]
-}[lang];
-
-document.getElementById("title").innerText=text[0];
-document.getElementById("sub").innerText=text[1];
-document.getElementById("live").innerText=text[2];
-document.getElementById("levelText").innerText=text[3];
-document.getElementById("scoreText").innerText=text[4];
-document.getElementById("rankText").innerText=text[5];
-document.getElementById("startBtn").innerText=text[6];
-document.getElementById("resetBtn").innerText=text[7];
-document.getElementById("shareBtn").innerText=text[8];
-document.getElementById("msg").innerText=text[9];
-}
-
-document.getElementById("startBtn").onclick=function(){
-startLevel();
+cn:["最近休息够吗？","测测你的反应速度","立即测试","准备好了吗？","开始挑战","发给朋友挑战","关卡","积分","全球排名"],
+en:["Rested Enough Recently?","Test your reaction speed","Start","Ready?","Play Again","Challenge Friends","Level","Score","Global Rank"],
+hk:["最近休息夠嗎？","測試反應速度","立即開始","準備好未？","開始挑戰","Send畀朋友挑戰","關卡","分數","全球排名"],
+jp:["最近ちゃんと休めた？","反応速度テスト","スタート","準備OK？","再挑戦","友達に送る","レベル","スコア","世界順位"],
+kr:["요즘 충분히 쉬었나요?","반응속도 테스트","시작","준비됐나요?","다시 시작","친구에게 공유","레벨","점수","세계 순위"]
 };
 
-function startLevel(){
-document.getElementById("startBtn").style.display="none";
-document.getElementById("msg").innerText="...";
-let wait=Math.random()*1800+900;
-setTimeout(showTarget,wait);
+function setLang(){
+lang=document.getElementById("lang").value;
+const t=text[lang];
+title.innerText=t[0];
+sub.innerText=t[1];
+mainBtn.innerText=t[2];
+result.innerText=t[3];
+restart.innerText=t[4];
+share.innerText=t[5];
+levelText.innerText=t[6];
+scoreText.innerText=t[7];
+rankText.innerText=t[8];
 }
 
-function showTarget(){
-const target=document.getElementById("target");
-const game=document.getElementById("game");
-
-let size=target.offsetWidth;
-let x=Math.random()*(game.clientWidth-size);
-let y=Math.random()*(game.clientHeight-size);
-
-target.style.left=x+"px";
-target.style.top=y+"px";
-target.style.display="block";
-
-startTime=Date.now();
-}
-
-document.getElementById("target").onclick=function(){
-let ms=Date.now()-startTime;
-this.style.display="none";
-
-let gain=Math.max(80,650-ms);
-score+=gain;
-level++;
-
-document.getElementById("score").innerText=score;
-document.getElementById("level").innerText=level;
-
-let beat=Math.min(99,Math.floor(score/15));
-document.getElementById("rank").innerText="Top "+(100-beat)+"%";
-
-document.getElementById("msg").innerHTML=
-"⚡ "+ms+" ms<br><span class='rank'>击败全球 "+beat+"% 玩家</span>";
-
-if(level<=maxLevel){
-setTimeout(startLevel,900);
-}else{
-document.getElementById("msg").innerHTML=
-"🏆 挑战完成！<br><span class='rank'>你击败全球 "+beat+"% 玩家</span>";
-document.getElementById("startBtn").style.display="block";
-}
-};
-
-function resetGame(){
+function startGame(){
 level=1;
 score=0;
-document.getElementById("level").innerText=1;
-document.getElementById("score").innerText=0;
-document.getElementById("rank").innerText="--";
-document.getElementById("msg").innerText="准备好了吗？";
-document.getElementById("target").style.display="none";
-document.getElementById("startBtn").style.display="block";
+updateUI();
+level1();
 }
 
-function shareResult(){
-alert("复制链接发给朋友挑战你！");
+function updateUI(){
+levelNum.innerText=level;
+scoreNum.innerText=score;
 }
+
+function level1(){
+game.innerHTML='<button class="btn" id="waitBtn">...</button>';
+let delay=Math.random()*2500+1000;
+setTimeout(()=>{
+let b=document.getElementById("waitBtn");
+if(!b)return;
+b.className="btn green";
+b.innerText="CLICK!";
+startTime=Date.now();
+b.onclick=()=>{
+let rt=Date.now()-startTime;
+score+=Math.max(0,300-rt);
+level=2;
+updateUI();
+result.innerText="Level1: "+rt+" ms";
+level2();
+};
+},delay);
+}
+
+function level2(){
+setTimeout(()=>{
+game.innerHTML='';
+let box=document.createElement("div");
+box.className="moveBox";
+game.appendChild(box);
+
+let gx=game.clientWidth-90;
+let gy=game.clientHeight-90;
+
+timer=setInterval(()=>{
+box.style.left=Math.random()*gx+"px";
+box.style.top=Math.random()*gy+"px";
+},500);
+
+box.onclick=()=>{
+clearInterval(timer);
+score+=250;
+level=3;
+updateUI();
+result.innerText="Level 2 Clear!";
+level3();
+};
+},900);
+}
+
+function level3(){
+setTimeout(()=>{
+game.innerHTML='';
+let dot=document.createElement("div");
+dot.className="smallDot";
+game.appendChild(dot);
+
+let gx=game.clientWidth-58;
+let gy=game.clientHeight-58;
+dot.style.left=Math.random()*gx+"px";
+dot.style.top=Math.random()*gy+"px";
+
+startTime=Date.now();
+
+dot.onclick=()=>{
+let rt=Date.now()-startTime;
+score+=Math.max(100,400-rt);
+finish();
+};
+},800);
+}
+
+function finish(){
+let rank=Math.max(1,Math.floor(100000/(score+10)));
+let beat=Math.min(99,Math.floor(score/8));
+rankNum.innerText="#"+rank;
+game.innerHTML='<button class="btn blue" onclick="startGame()">再来一次</button>';
+result.innerHTML="🏆 通关成功<br>积分："+score+"<br>击败全球 "+beat+"% 玩家";
+}
+
+setLang();
 </script>
-
 </body>
 </html>
