@@ -17,7 +17,7 @@ body{
   background:#eef0f7;
   color:#111;
 }
-.wrapper{
+.wrap{
   max-width:430px;
   margin:auto;
   min-height:100vh;
@@ -25,31 +25,31 @@ body{
 }
 .card{
   background:#fff;
-  border-radius:24px;
+  border-radius:26px;
   padding:18px;
-  box-shadow:0 10px 30px rgba(0,0,0,.06);
+  box-shadow:0 12px 28px rgba(0,0,0,.06);
 }
 select{
   width:100%;
   padding:12px 14px;
-  border:2px solid #ececec;
   border-radius:16px;
+  border:2px solid #ececec;
   font-size:16px;
-  margin-bottom:14px;
   background:#fff;
+  margin-bottom:14px;
 }
 .notice{
   background:#efe6cf;
   border-radius:18px;
-  padding:14px 16px;
+  padding:14px;
   text-align:center;
   font-size:18px;
-  font-weight:700;
+  font-weight:800;
   margin-bottom:14px;
 }
 h1{
   text-align:center;
-  font-size:30px;
+  font-size:28px;
   line-height:1.25;
   margin:10px 0 6px;
 }
@@ -72,14 +72,13 @@ h1{
   text-align:center;
 }
 .big{
-  font-size:34px;
-  font-weight:800;
-  line-height:1;
+  font-size:32px;
+  font-weight:900;
 }
 .small{
-  margin-top:8px;
   font-size:15px;
   color:#666;
+  margin-top:6px;
 }
 .arena{
   position:relative;
@@ -87,42 +86,43 @@ h1{
   border-radius:24px;
   background:#f4f5fa;
   overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
   margin-bottom:16px;
 }
 .target{
   position:absolute;
-  width:145px;
-  height:145px;
-  border-radius:22px;
-  background:#ff5353;
+  width:132px;
+  height:132px;
+  border-radius:24px;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  background:#ff5757;
   color:#fff;
-  font-size:24px;
-  font-weight:800;
   display:flex;
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:10px;
-  cursor:pointer;
+  font-size:22px;
+  font-weight:900;
   user-select:none;
+  transition:.18s;
 }
-.green{background:#17c37d;}
-.blue{background:#3d7cff;}
-.orange{background:#ff9d18;}
-
+.green{background:#16c37d;}
+.blue{background:#3b82f6;}
+.orange{background:#ff9f1a;}
 .btn{
   width:100%;
   border:none;
+  border-radius:18px;
   background:#111;
   color:#fff;
   padding:16px;
   font-size:22px;
-  font-weight:800;
-  border-radius:18px;
+  font-weight:900;
   cursor:pointer;
+}
+.btn:active{
+  transform:scale(.98);
 }
 .result{
   margin-top:16px;
@@ -130,34 +130,34 @@ h1{
   line-height:1.8;
 }
 .result h2{
-  font-size:30px;
+  font-size:28px;
 }
 .rank{
-  color:#333;
   font-size:18px;
-  font-weight:700;
+  font-weight:800;
+  color:#333;
 }
 @media(max-width:420px){
-  h1{font-size:26px;}
+  h1{font-size:25px;}
   .arena{height:290px;}
   .target{
-    width:125px;
-    height:125px;
-    font-size:21px;
+    width:118px;
+    height:118px;
+    font-size:20px;
   }
 }
 </style>
 </head>
 
 <body>
-<div class="wrapper">
+<div class="wrap">
 <div class="card">
 
 <select>
 <option>中文（简体）</option>
 </select>
 
-<div class="notice" id="notice">🔥 今日已有 29,711 人挑战中...</div>
+<div class="notice" id="notice">🔥 今日已有 29,800 人挑战中...</div>
 
 <h1>最近你有好好休息吗？</h1>
 <div class="sub">测测你的反应速度</div>
@@ -180,7 +180,7 @@ h1{
 </div>
 
 <div class="arena" id="arena">
-  <div class="target" id="target">立即测试</div>
+  <div class="target" id="target">准备中</div>
 </div>
 
 <button class="btn" onclick="startGame()">开始挑战</button>
@@ -191,20 +191,15 @@ h1{
 </div>
 
 <script>
-/* challenger counter */
-let people = 29711;
-
+let people = 29800;
 setInterval(()=>{
-  people += Math.floor(Math.random()*8)+1;
-
-  document.getElementById("notice").innerText =
-    "🔥 今日已有 " + people.toLocaleString() + " 人挑战中...";
+  people += Math.floor(Math.random()*6)+1;
+  notice.innerText = "🔥 今日已有 " + people.toLocaleString() + " 人挑战中...";
 },2500);
 
-/* game vars */
 let level = 1;
 let score = 0;
-let moveTimer = null;
+let timer = null;
 let startTime = 0;
 
 const target = document.getElementById("target");
@@ -215,11 +210,12 @@ function updateUI(){
   scoreNum.innerText = score;
 }
 
-function resetTarget(){
-  clearInterval(moveTimer);
+function resetBox(){
+  clearInterval(timer);
   target.className = "target";
-  target.style.left = "";
-  target.style.top = "";
+  target.style.left = "50%";
+  target.style.top = "50%";
+  target.style.transform = "translate(-50%,-50%)";
   target.onclick = null;
 }
 
@@ -233,11 +229,10 @@ function startGame(){
 }
 
 function runLevel(){
-  resetTarget();
+  resetBox();
 
-  /* stage 1 */
   if(level===1){
-    target.innerText = "准备中...";
+    target.innerText = "等待变绿...";
     setTimeout(()=>{
       target.classList.add("green");
       target.innerText = "点击!";
@@ -245,21 +240,20 @@ function runLevel(){
 
       target.onclick = ()=>{
         let ms = Date.now()-startTime;
-        score += Math.max(320-ms,50);
+        score += Math.max(320-ms,60);
         level = 2;
         updateUI();
         runLevel();
       };
-    },1200+Math.random()*1500);
+    },1000+Math.random()*1400);
   }
 
-  /* stage 2 moving */
   else if(level===2){
     target.classList.add("blue");
     target.innerText = "追我!";
 
     moveRandom();
-    moveTimer = setInterval(moveRandom,700);
+    timer = setInterval(moveRandom,650);
 
     target.onclick = ()=>{
       score += 180;
@@ -269,11 +263,10 @@ function runLevel(){
     };
   }
 
-  /* stage 3 triple tap */
   else if(level===3){
     target.classList.add("orange");
     let hit = 3;
-    target.innerText = "连击3次";
+    target.innerText = "连点3次";
 
     target.onclick = ()=>{
       hit--;
@@ -288,11 +281,10 @@ function runLevel(){
     };
   }
 
-  /* stage 4 slide */
   else if(level===4){
     target.classList.add("green");
     target.innerText = "抓住我!";
-    slideTarget();
+    slideMove();
 
     target.onclick = ()=>{
       score += 350;
@@ -302,55 +294,52 @@ function runLevel(){
 }
 
 function moveRandom(){
-  let maxX = arena.clientWidth-target.offsetWidth;
-  let maxY = arena.clientHeight-target.offsetHeight;
+  let maxX = arena.clientWidth - target.offsetWidth;
+  let maxY = arena.clientHeight - target.offsetHeight;
 
-  target.style.left = Math.random()*maxX+"px";
-  target.style.top = Math.random()*maxY+"px";
+  target.style.transform = "none";
+  target.style.left = Math.random()*maxX + "px";
+  target.style.top = Math.random()*maxY + "px";
 }
 
-function slideTarget(){
-  const points = [
+function slideMove(){
+  const p = [
     [0,0],
-    [0,170],
+    [0,180],
     [260,0],
-    [260,170]
+    [260,180]
   ];
 
-  let a = points[Math.floor(Math.random()*points.length)];
-  let b = points[Math.floor(Math.random()*points.length)];
-
+  let a = p[Math.floor(Math.random()*p.length)];
+  let b = p[Math.floor(Math.random()*p.length)];
   while(a===b){
-    b = points[Math.floor(Math.random()*points.length)];
+    b = p[Math.floor(Math.random()*p.length)];
   }
 
   let step = 0;
+  target.style.transform = "none";
 
-  moveTimer = setInterval(()=>{
+  timer = setInterval(()=>{
     step++;
 
-    let x = a[0] + (b[0]-a[0]) * step/22;
-    let y = a[1] + (b[1]-a[1]) * step/22;
+    let x = a[0] + (b[0]-a[0])*step/24;
+    let y = a[1] + (b[1]-a[1])*step/24;
 
     target.style.left = x+"px";
     target.style.top = y+"px";
 
-    if(step>=22){
-      clearInterval(moveTimer);
-      slideTarget();
+    if(step>=24){
+      clearInterval(timer);
+      slideMove();
     }
-  },35);
+  },32);
 }
 
 function finishGame(){
-  clearInterval(moveTimer);
+  clearInterval(timer);
 
   let beat = Math.min(99.9,(70+score/18)).toFixed(1);
-
-  let rank = Math.max(
-    1,
-    Math.floor(people*(100-beat)/100)
-  );
+  let rank = Math.max(1,Math.floor(people*(100-beat)/100));
 
   rankNum.innerText = "#" + rank.toLocaleString();
 
@@ -361,6 +350,9 @@ function finishGame(){
   `;
 
   target.className = "target green";
+  target.style.left = "50%";
+  target.style.top = "50%";
+  target.style.transform = "translate(-50%,-50%)";
   target.innerText = "再来一次";
   target.onclick = startGame;
 }
