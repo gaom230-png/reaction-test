@@ -6,7 +6,11 @@
 <title>最近你有好好休息吗？</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
 body{
 font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
@@ -28,6 +32,7 @@ box-shadow:0 10px 28px rgba(0,0,0,.06);
 overflow:hidden;
 }
 
+/* language */
 .lang{
 width:100%;
 padding:10px 12px;
@@ -35,36 +40,44 @@ font-size:15px;
 border:2px solid #e3e3e3;
 border-radius:14px;
 margin-bottom:12px;
+background:#fff;
 }
 
+/* top live bar */
 .liveWrap{
 background:#f8efd8;
 border-radius:16px;
-padding:10px 0;
-overflow:hidden;
+padding:14px;
 margin-bottom:12px;
+text-align:center;
 }
 
-.liveTrack{
-white-space:nowrap;
+.liveStatic{
+font-size:16px;
+font-weight:900;
+color:#111;
+}
+
+#liveNum{
+font-size:18px;
+font-weight:900;
+animation:pulse 1.6s infinite;
 display:inline-block;
-font-size:14px;
-font-weight:800;
-padding-left:100%;
-animation:marquee 16s linear infinite;
 }
 
-@keyframes marquee{
-from{transform:translateX(0);}
-to{transform:translateX(-100%);}
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.08);}
+100%{transform:scale(1);}
 }
 
+/* title */
 h1{
 font-size:28px;
-text-align:center;
-font-weight:900;
-margin-bottom:4px;
 line-height:1.2;
+font-weight:900;
+text-align:center;
+margin-bottom:4px;
 }
 
 .sub{
@@ -75,6 +88,7 @@ font-weight:700;
 margin-bottom:12px;
 }
 
+/* stats */
 .stats{
 display:grid;
 grid-template-columns:repeat(3,1fr);
@@ -101,16 +115,17 @@ margin-top:4px;
 font-weight:700;
 }
 
+/* game box */
 .gamebox{
-height:230px;
+height:250px;
 background:#f3f4fa;
 border-radius:18px;
 position:relative;
 overflow:hidden;
-margin-bottom:12px;
 display:flex;
 justify-content:center;
 align-items:center;
+margin-bottom:12px;
 }
 
 .target{
@@ -125,11 +140,12 @@ align-items:center;
 font-size:22px;
 font-weight:900;
 cursor:pointer;
+user-select:none;
 position:absolute;
 left:50%;
 top:50%;
 transform:translate(-50%,-50%);
-user-select:none;
+transition:.12s;
 }
 
 .green{background:#18c97a;}
@@ -145,16 +161,18 @@ transform:none;
 }
 
 .slideRect{
-width:82px;
-height:62px;
+width:84px;
+height:58px;
+font-size:18px;
 border-radius:14px;
 transform:none;
 }
 
+/* result */
 .result{
 text-align:center;
-min-height:58px;
 margin-bottom:10px;
+min-height:58px;
 }
 
 .result h2{
@@ -168,6 +186,7 @@ color:#666;
 margin:2px 0;
 }
 
+/* buttons */
 .btn{
 width:100%;
 border:none;
@@ -175,12 +194,24 @@ border-radius:16px;
 padding:13px;
 font-size:18px;
 font-weight:900;
-margin-top:8px;
 cursor:pointer;
+margin-top:8px;
 }
 
-.black{background:#000;color:#fff;}
-.gray{background:#eef0f5;color:#111;}
+.black{
+background:#000;
+color:#fff;
+}
+
+.gray{
+background:#eef0f5;
+color:#111;
+}
+
+@media(max-height:740px){
+.gamebox{height:220px;}
+h1{font-size:25px;}
+}
 </style>
 </head>
 
@@ -197,16 +228,29 @@ cursor:pointer;
 </select>
 
 <div class="liveWrap">
-<div class="liveTrack" id="liveTrack">🔥 今日已有 28,642 人挑战中...</div>
+<div class="liveStatic">
+🔥 今日已有 <span id="liveNum">29,580</span> 人挑战中...
+</div>
 </div>
 
 <h1>最近你有好好休息吗？</h1>
 <div class="sub">测测你的反应速度</div>
 
 <div class="stats">
-<div class="stat"><div class="num" id="level">1</div><div class="label">关卡</div></div>
-<div class="stat"><div class="num" id="score">0</div><div class="label">积分</div></div>
-<div class="stat"><div class="num" id="rank">--</div><div class="label">全球排名</div></div>
+<div class="stat">
+<div class="num" id="level">1</div>
+<div class="label">关卡</div>
+</div>
+
+<div class="stat">
+<div class="num" id="score">0</div>
+<div class="label">积分</div>
+</div>
+
+<div class="stat">
+<div class="num" id="rank">--</div>
+<div class="label">全球排名</div>
+</div>
 </div>
 
 <div class="gamebox" id="gamebox">
@@ -235,17 +279,18 @@ let slideTimer=null;
 
 const target=document.getElementById("target");
 const gamebox=document.getElementById("gamebox");
-const levelEl=document.getElementById("level");
+const level=document.getElementById("level");
 const scoreEl=document.getElementById("score");
-const rankEl=document.getElementById("rank");
-const resultEl=document.getElementById("result");
+const rank=document.getElementById("rank");
+const result=document.getElementById("result");
 
 /* live count */
 setInterval(()=>{
-let n=28642+Math.floor(Math.random()*1500);
-document.getElementById("liveTrack").innerHTML="🔥 今日已有 "+n.toLocaleString()+" 人挑战中...";
-},3500);
+let n=28642+Math.floor(Math.random()*3000);
+document.getElementById("liveNum").innerText=n.toLocaleString();
+},3000);
 
+/* start */
 function restartGame(){
 clearInterval(moveTimer);
 clearInterval(slideTimer);
@@ -255,11 +300,11 @@ score=0;
 ready=false;
 tapCount=0;
 
-levelEl.innerText="1";
+level.innerText="1";
 scoreEl.innerText="0";
-rankEl.innerText="--";
+rank.innerText="--";
 
-resultEl.innerHTML="<h2>准备好了吗？</h2><p>等待变绿后立即点击</p>";
+result.innerHTML="<h2>准备好了吗？</h2><p>等待变绿后立即点击</p>";
 
 target.className="target";
 target.innerText="等待...";
@@ -274,41 +319,50 @@ ready=true;
 target.className="target green";
 target.innerText="点击!";
 startTime=Date.now();
-},900+Math.random()*1500);
+},900+Math.random()*1400);
 }
 
+/* click logic */
 target.onclick=function(){
 
 if(stage===1 && ready){
 let rt=Date.now()-startTime;
 score=Math.max(100,420-rt);
 scoreEl.innerText=score;
-levelEl.innerText="2";
-resultEl.innerHTML="<h2>第一关完成</h2><p>"+rt+" ms</p>";
+level.innerText="2";
+
+result.innerHTML="<h2>第一关完成</h2><p>"+rt+" ms</p>";
+
 stage=2;
-setTimeout(level2,400);
+setTimeout(level2,420);
 return;
 }
 
 if(stage===2){
 clearInterval(moveTimer);
+
 score+=180;
 scoreEl.innerText=score;
-levelEl.innerText="3";
-resultEl.innerHTML="<h2>第二关完成</h2><p>继续冲刺！</p>";
+level.innerText="3";
+
+result.innerHTML="<h2>第二关完成</h2><p>继续冲刺！</p>";
+
 stage=3;
-setTimeout(level3,300);
+setTimeout(level3,320);
 return;
 }
 
 if(stage===3){
 tapCount++;
 target.innerText="连点"+(5-tapCount)+"次";
+
 if(tapCount>=5){
 score+=220;
 scoreEl.innerText=score;
-levelEl.innerText="4";
-resultEl.innerHTML="<h2>第三关完成</h2><p>终极挑战来了！</p>";
+level.innerText="4";
+
+result.innerHTML="<h2>第三关完成</h2><p>终极挑战来了！</p>";
+
 stage=4;
 setTimeout(level4,400);
 }
@@ -325,7 +379,7 @@ restartGame();
 }
 };
 
-/* stage2 */
+/* level2 moving square */
 function level2(){
 target.className="target small blue";
 target.innerText="抓我";
@@ -333,15 +387,17 @@ target.innerText="抓我";
 moveTimer=setInterval(()=>{
 let maxX=gamebox.clientWidth-84;
 let maxY=gamebox.clientHeight-84;
+
 target.style.left=Math.random()*maxX+"px";
 target.style.top=Math.random()*maxY+"px";
 target.style.transform="none";
 },420);
 }
 
-/* stage3 */
+/* level3 tap spam */
 function level3(){
 tapCount=0;
+
 target.className="target green";
 target.style.width="118px";
 target.style.height="118px";
@@ -351,34 +407,38 @@ target.style.transform="translate(-50%,-50%)";
 target.innerText="连点5次";
 }
 
-/* NEW stage4 */
+/* level4 sliding rectangle */
 function level4(){
 
 target.className="target purple slideRect";
 target.innerText="点我";
 
-let boxW=82;
-let boxH=62;
-let maxX=gamebox.clientWidth-boxW;
-let maxY=gamebox.clientHeight-boxH;
+let w=84;
+let h=58;
+let maxX=gamebox.clientWidth-w;
+let maxY=gamebox.clientHeight-h;
 
 let paths=[
-{sx:0,sy:0,ex:maxX,ey:0},             // 左上->右上
-{sx:0,sy:0,ex:0,ey:maxY},            // 左上->左下
-{sx:0,sy:0,ex:maxX,ey:maxY},         // 左上->右下
-{sx:maxX,sy:0,ex:0,ey:maxY},         // 右上->左下
-{sx:0,sy:maxY,ex:maxX,ey:0},         // 左下->右上
-{sx:maxX,sy:maxY,ex:0,ey:0}          // 右下->左上
+{sx:0,sy:0,ex:maxX,ey:0},
+{sx:0,sy:0,ex:0,ey:maxY},
+{sx:0,sy:0,ex:maxX,ey:maxY},
+{sx:maxX,sy:0,ex:0,ey:maxY},
+{sx:0,sy:maxY,ex:maxX,ey:0},
+{sx:maxX,sy:maxY,ex:0,ey:0}
 ];
 
 let p=paths[Math.floor(Math.random()*paths.length)];
-let step=0;
-let total=22;
 
-clearInterval(slideTimer);
+target.style.left=p.sx+"px";
+target.style.top=p.sy+"px";
+target.style.transform="none";
+
+let step=0;
+let total=28;
 
 slideTimer=setInterval(()=>{
 step++;
+
 let t=step/total;
 
 let x=p.sx+(p.ex-p.sx)*t;
@@ -386,42 +446,41 @@ let y=p.sy+(p.ey-p.sy)*t;
 
 target.style.left=x+"px";
 target.style.top=y+"px";
-target.style.transform="none";
 
 if(step>=total){
 clearInterval(slideTimer);
-level4(); /* repeat if missed */
+level4();
 }
-},28);
+},25);
 }
 
 /* finish */
 function finishGame(){
 clearInterval(slideTimer);
-stage=5;
 
+stage=5;
 score+=320;
 scoreEl.innerText=score;
 
-let rank="前50%";
-if(score>950) rank="前1%";
-else if(score>820) rank="前5%";
-else if(score>700) rank="前10%";
-else if(score>580) rank="前25%";
+let rankText="前50%";
+if(score>950) rankText="前1%";
+else if(score>820) rankText="前5%";
+else if(score>700) rankText="前10%";
+else if(score>580) rankText="前25%";
 
-rankEl.innerText=rank;
+rank.innerText=rankText;
 
-resultEl.innerHTML=
+result.innerHTML=
 "<h2>🏆 挑战成功</h2><p>总分："+score+
-"</p><p>你已进入全球"+rank+"</p>";
+"</p><p>你已进入全球"+rankText+"</p>";
 
 target.className="target";
+target.innerText="再来一次";
 target.style.width="122px";
 target.style.height="122px";
 target.style.left="50%";
 target.style.top="50%";
 target.style.transform="translate(-50%,-50%)";
-target.innerText="再来一次";
 }
 </script>
 
