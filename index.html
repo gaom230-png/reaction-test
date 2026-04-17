@@ -3,259 +3,355 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>⚡ 手速挑战赛</title>
+<title>⚡ 手速闯关挑战</title>
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 body{
 font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
-background:linear-gradient(135deg,#fdfbfb,#ebedee);
-min-height:100vh;
+background:linear-gradient(135deg,#f8f9ff,#eef2ff);
+padding:16px;
 display:flex;
 justify-content:center;
-align-items:center;
-padding:16px;
+min-height:100vh;
 }
-.card{
+.wrap{
 width:100%;
 max-width:430px;
 background:#fff;
-border-radius:24px;
-padding:22px;
-box-shadow:0 18px 45px rgba(0,0,0,.08);
+border-radius:26px;
+padding:18px;
+box-shadow:0 20px 50px rgba(0,0,0,.08);
+position:relative;
+}
+.lang{
+position:absolute;top:16px;right:16px;
+border:none;background:#111;color:#fff;
+padding:8px 14px;border-radius:999px;
+font-weight:800;cursor:pointer;
 }
 .title{
-text-align:center;
-font-size:30px;
-font-weight:800;
-margin-bottom:6px;
+font-size:28px;font-weight:900;text-align:center;margin-top:10px;
 }
 .sub{
-text-align:center;
-color:#666;
-font-size:14px;
-margin-bottom:18px;
+text-align:center;color:#666;font-size:14px;margin:8px 0 14px;
 }
 .stats{
-display:flex;
-gap:10px;
-margin-bottom:16px;
+display:flex;gap:10px;margin-bottom:14px;
 }
-.item{
-flex:1;
-background:#f5f6ff;
-border-radius:16px;
-padding:12px;
-text-align:center;
+.box{
+flex:1;background:#f5f6ff;border-radius:14px;
+padding:10px;text-align:center;
 }
-.num{
-font-size:22px;
-font-weight:800;
-}
-.label{
-font-size:12px;
-color:#666;
-margin-top:4px;
-}
-#game{
-height:320px;
+.num{font-size:22px;font-weight:900}
+.lab{font-size:12px;color:#666;margin-top:4px}
+#arena{
+height:330px;
 border-radius:22px;
-background:#ff4d4f;
+background:#f4f6ff;
+position:relative;
+overflow:hidden;
 display:flex;
 justify-content:center;
 align-items:center;
 text-align:center;
-color:#fff;
-font-size:28px;
-font-weight:800;
-cursor:pointer;
-user-select:none;
-transition:.2s;
 padding:20px;
 }
-#game:active{
-transform:scale(.98);
+.centerBtn{
+background:#ff4d4f;color:#fff;border:none;
+padding:18px 26px;border-radius:18px;
+font-size:24px;font-weight:900;
+cursor:pointer;
 }
+.target{
+position:absolute;
+width:70px;height:70px;
+border-radius:16px;
+background:#10b981;
+display:flex;
+justify-content:center;
+align-items:center;
+color:#fff;
+font-weight:900;
+cursor:pointer;
+}
+.fake{background:#ff4d4f}
 #msg{
 margin-top:16px;
 text-align:center;
-font-size:22px;
-font-weight:800;
+font-size:24px;
+font-weight:900;
 }
 #desc{
 margin-top:8px;
 text-align:center;
 color:#666;
 line-height:1.6;
-min-height:48px;
+min-height:46px;
 }
 .btns{
-display:grid;
-gap:10px;
-margin-top:18px;
+display:grid;gap:10px;margin-top:16px;
 }
-button{
-border:none;
-padding:14px;
-font-size:16px;
-font-weight:800;
-border-radius:14px;
-cursor:pointer;
+button.action{
+border:none;padding:14px;border-radius:14px;
+font-size:16px;font-weight:900;cursor:pointer;
 }
-.main{
-background:#111;
-color:#fff;
-}
-.sec{
-background:#eef1ff;
-}
+.main{background:#111;color:#fff}
+.sec{background:#eef1ff}
 .tip{
-text-align:center;
-margin-top:12px;
-font-size:12px;
-color:#999;
+margin-top:12px;text-align:center;font-size:12px;color:#999;
 }
 </style>
 </head>
 <body>
 
-<div class="card">
+<div class="wrap">
 
-<div class="title">⚡ 手速挑战赛</div>
-<div class="sub">变绿后立刻点击，看看你能击败多少人</div>
+<button class="lang" onclick="toggleLang()" id="langBtn">EN</button>
+
+<div class="title" id="title">⚡ 手速闯关挑战</div>
+<div class="sub" id="sub">你能通过3关吗？</div>
 
 <div class="stats">
-<div class="item">
-<div class="num" id="best">--</div>
-<div class="label">最佳成绩</div>
+<div class="box">
+<div class="num" id="levelNum">1</div>
+<div class="lab" id="lab1">当前关卡</div>
 </div>
-<div class="item">
-<div class="num" id="count">0</div>
-<div class="label">挑战次数</div>
+<div class="box">
+<div class="num" id="scoreNum">0</div>
+<div class="lab" id="lab2">积分</div>
 </div>
-<div class="item">
-<div class="num" id="rank">--</div>
-<div class="label">全国排名</div>
+<div class="box">
+<div class="num" id="bestNum">1</div>
+<div class="lab" id="lab3">最高关卡</div>
 </div>
 </div>
 
-<div id="game">点击开始</div>
+<div id="arena">
+<button class="centerBtn" onclick="startGame()" id="startBtn">开始挑战</button>
+</div>
 
 <div id="msg">准备好了吗？</div>
-<div id="desc">很多人都低估了这个游戏 😏</div>
+<div id="desc">很多人卡在第二关 😏</div>
 
 <div class="btns">
-<button class="main" onclick="startGame()">开始挑战</button>
-<button class="sec" onclick="shareResult()">分享到朋友圈</button>
+<button class="action main" onclick="startGame()" id="restartBtn">重新开始</button>
+<button class="action sec" onclick="shareGame()" id="shareBtn">发给朋友挑战</button>
 </div>
 
-<div class="tip">据说低于200ms的人非常少 👀</div>
+<div class="tip" id="tip">通关后记得截图炫耀 👀</div>
 
 </div>
 
 <script>
-let waiting=false;
-let ready=false;
-let startTime=0;
+let lang=navigator.language.startsWith("zh")?"zh":"en";
+let level=1;
+let score=0;
+let best=localStorage.getItem("v5best")||1;
 let timer=null;
+let moveTimer=null;
 
-let best=localStorage.getItem("cn_best");
-let count=localStorage.getItem("cn_count") || 0;
+const T={
+zh:{
+title:"⚡ 手速闯关挑战",
+sub:"你能通过3关吗？",
+l1:"当前关卡",l2:"积分",l3:"最高关卡",
+start:"开始挑战",restart:"重新开始",
+share:"发给朋友挑战",
+ready:"准备好了吗？",
+d:"很多人卡在第二关 😏",
+tip:"通关后记得截图炫耀 👀",
+pass:"过关！",
+fail:"失败了",
+shareText:"⚡ 我闯到第"
+},
+en:{
+title:"⚡ Speed Challenge",
+sub:"Can you beat all 3 levels?",
+l1:"Level",l2:"Score",l3:"Best",
+start:"Start",restart:"Restart",
+share:"Challenge Friends",
+ready:"Ready?",
+d:"Most people fail level 2 😏",
+tip:"Screenshot your win 👀",
+pass:"Passed!",
+fail:"Failed!",
+shareText:"⚡ I reached level "
+}
+};
 
-update();
+function applyLang(){
+let t=T[lang];
+title.innerHTML=t.title;
+sub.innerHTML=t.sub;
+lab1.innerHTML=t.l1;
+lab2.innerHTML=t.l2;
+lab3.innerHTML=t.l3;
+startBtn.innerHTML=t.start;
+restartBtn.innerHTML=t.restart;
+shareBtn.innerHTML=t.share;
+msg.innerHTML=t.ready;
+desc.innerHTML=t.d;
+tip.innerHTML=t.tip;
+langBtn.innerHTML=lang=="zh"?"EN":"中文";
+}
 
-function update(){
-document.getElementById("best").textContent = best ? best+"ms" : "--";
-document.getElementById("count").textContent = count;
+function toggleLang(){
+lang=lang=="zh"?"en":"zh";
+applyLang();
+}
+
+function updateStats(){
+levelNum.innerHTML=level;
+scoreNum.innerHTML=score;
+bestNum.innerHTML=best;
+}
+
+function resetArena(){
+clearTimeout(timer);
+clearInterval(moveTimer);
+arena.innerHTML="";
 }
 
 function startGame(){
-clearTimeout(timer);
-waiting=true;
-ready=false;
+level=1;
+score=0;
+updateStats();
+runLevel1();
+}
 
-const game=document.getElementById("game");
-game.style.background="#ff4d4f";
-game.innerHTML="等待变绿...";
-document.getElementById("msg").innerHTML="别抢点";
-document.getElementById("desc").innerHTML="集中注意力";
+function runLevel1(){
+resetArena();
+msg.innerHTML=lang=="zh"?"第一关":"Level 1";
+desc.innerHTML=lang=="zh"?"等变绿后立刻点击":"Tap when green";
+
+let btn=document.createElement("button");
+btn.className="centerBtn";
+btn.innerHTML=lang=="zh"?"等待...":"Wait...";
+arena.appendChild(btn);
 
 timer=setTimeout(()=>{
-ready=true;
-startTime=Date.now();
-game.style.background="#10b981";
-game.innerHTML="快点我！";
-document.getElementById("msg").innerHTML="现在！";
-document.getElementById("desc").innerHTML="立刻点击";
-},Math.random()*2500+1500);
+btn.style.background="#10b981";
+btn.innerHTML=lang=="zh"?"快点我！":"TAP!";
+let st=Date.now();
+
+btn.onclick=()=>{
+let ms=Date.now()-st;
+score+=Math.max(50,500-ms);
+level=2;
+updateStats();
+setTimeout(runLevel2,300);
+};
+},1500+Math.random()*2000);
 }
 
-document.getElementById("game").onclick=function(){
+function runLevel2(){
+resetArena();
+msg.innerHTML=lang=="zh"?"第二关":"Level 2";
+desc.innerHTML=lang=="zh"?"点击移动方块":"Tap moving target";
 
-const game=this;
+let box=document.createElement("div");
+box.className="target";
+box.innerHTML="GO";
+arena.appendChild(box);
 
-if(waiting && !ready){
-clearTimeout(timer);
-waiting=false;
-game.style.background="#111";
-game.innerHTML="抢跑了";
-document.getElementById("msg").innerHTML="❌ 太心急";
-document.getElementById("desc").innerHTML="等变绿再点";
-return;
+function move(){
+let x=Math.random()*300;
+let y=Math.random()*240;
+box.style.left=x+"px";
+box.style.top=y+"px";
+}
+move();
+moveTimer=setInterval(move,700);
+
+box.onclick=()=>{
+clearInterval(moveTimer);
+score+=200;
+level=3;
+updateStats();
+setTimeout(runLevel3,300);
+};
 }
 
-if(ready){
-let score=Date.now()-startTime;
-waiting=false;
-ready=false;
-count++;
-localStorage.setItem("cn_count",count);
+function runLevel3(){
+resetArena();
+msg.innerHTML=lang=="zh"?"第三关":"Level 3";
+desc.innerHTML=lang=="zh"?"找出绿色目标":"Find green target";
 
-if(!best || score < best){
-best=score;
-localStorage.setItem("cn_best",score);
+for(let i=0;i<3;i++){
+let b=document.createElement("div");
+b.className="target "+(i==1?"":"fake");
+b.style.left=(30+i*110)+"px";
+b.style.top="120px";
+b.innerHTML="?";
+arena.appendChild(b);
+
+b.onclick=()=>{
+if(i==1){
+score+=300;
+winGame();
+}else{
+loseGame();
 }
-
-let percent=Math.max(1,Math.min(99,Math.floor((500-score)/3)));
-document.getElementById("rank").innerHTML="前"+percent+"%";
-
-let title="普通选手";
-if(score<180) title="⚡ 天选之手";
-else if(score<220) title="🔥 手速大神";
-else if(score<260) title="😎 高手";
-else if(score<320) title="🙂 还不错";
-else title="🐢 再练练";
-
-game.style.background="#6366f1";
-game.innerHTML=score+"ms";
-
-document.getElementById("msg").innerHTML=title;
-document.getElementById("desc").innerHTML=
-"你击败了 <b>"+percent+"%</b> 的玩家<br>朋友能超过你吗？";
-
-update();
+};
 }
 }
 
-function shareResult(){
+function winGame(){
+resetArena();
+msg.innerHTML="🏆 "+(lang=="zh"?"通关成功":"YOU WIN");
+desc.innerHTML=lang=="zh"?
+"积分："+score+"<br>你是真正的高手":
+"Score: "+score+"<br>You are elite";
 
-let score=document.getElementById("game").innerText;
-let text="⚡ 我刚测出 "+score+"！你能超过我吗？\n"+location.href;
+if(level>best){
+best=level;
+localStorage.setItem("v5best",best);
+}
+updateStats();
+
+let btn=document.createElement("button");
+btn.className="centerBtn";
+btn.style.background="#10b981";
+btn.innerHTML=lang=="zh"?"再来一次":"Play Again";
+btn.onclick=startGame;
+arena.appendChild(btn);
+}
+
+function loseGame(){
+resetArena();
+msg.innerHTML="❌ "+(lang=="zh"?"挑战失败":"FAILED");
+desc.innerHTML=lang=="zh"?
+"止步第 "+level+" 关<br>再试一次":
+"Stopped at level "+level+"<br>Try again";
+
+if(level>best){
+best=level;
+localStorage.setItem("v5best",best);
+}
+updateStats();
+
+let btn=document.createElement("button");
+btn.className="centerBtn";
+btn.innerHTML=lang=="zh"?"重新挑战":"Retry";
+btn.onclick=startGame;
+arena.appendChild(btn);
+}
+
+function shareGame(){
+let txt=lang=="zh"?
+T.zh.shareText+level+"关，你能超过我吗？ "+location.href:
+T.en.shareText+level+". Can you beat me? "+location.href;
 
 if(navigator.share){
-navigator.share({
-title:"手速挑战赛",
-text:text,
-url:location.href
-});
+navigator.share({title:"Speed Challenge",text:txt,url:location.href});
 }else{
-navigator.clipboard.writeText(text);
-alert("已复制分享文案，发到朋友圈试试！");
+navigator.clipboard.writeText(txt);
+alert(lang=="zh"?"已复制分享文案":"Copied!");
 }
 }
+
+applyLang();
+updateStats();
 </script>
 
 </body>
