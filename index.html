@@ -1,64 +1,261 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>Reaction Speed Test</title>
-  <style>
-    body {
-      text-align: center;
-      font-family: Arial;
-      background-color: #f5f5f5;
-    }
-    #box {
-      width: 300px;
-      height: 300px;
-      margin: 50px auto;
-      background-color: red;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>⚡ 手速挑战赛</title>
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+body{
+font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+background:linear-gradient(135deg,#fdfbfb,#ebedee);
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:16px;
+}
+.card{
+width:100%;
+max-width:430px;
+background:#fff;
+border-radius:24px;
+padding:22px;
+box-shadow:0 18px 45px rgba(0,0,0,.08);
+}
+.title{
+text-align:center;
+font-size:30px;
+font-weight:800;
+margin-bottom:6px;
+}
+.sub{
+text-align:center;
+color:#666;
+font-size:14px;
+margin-bottom:18px;
+}
+.stats{
+display:flex;
+gap:10px;
+margin-bottom:16px;
+}
+.item{
+flex:1;
+background:#f5f6ff;
+border-radius:16px;
+padding:12px;
+text-align:center;
+}
+.num{
+font-size:22px;
+font-weight:800;
+}
+.label{
+font-size:12px;
+color:#666;
+margin-top:4px;
+}
+#game{
+height:320px;
+border-radius:22px;
+background:#ff4d4f;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+color:#fff;
+font-size:28px;
+font-weight:800;
+cursor:pointer;
+user-select:none;
+transition:.2s;
+padding:20px;
+}
+#game:active{
+transform:scale(.98);
+}
+#msg{
+margin-top:16px;
+text-align:center;
+font-size:22px;
+font-weight:800;
+}
+#desc{
+margin-top:8px;
+text-align:center;
+color:#666;
+line-height:1.6;
+min-height:48px;
+}
+.btns{
+display:grid;
+gap:10px;
+margin-top:18px;
+}
+button{
+border:none;
+padding:14px;
+font-size:16px;
+font-weight:800;
+border-radius:14px;
+cursor:pointer;
+}
+.main{
+background:#111;
+color:#fff;
+}
+.sec{
+background:#eef1ff;
+}
+.tip{
+text-align:center;
+margin-top:12px;
+font-size:12px;
+color:#999;
+}
+</style>
 </head>
 <body>
 
-<h1>Reaction Speed Test</h1>
-<div id="box">Click to Start</div>
-<h2 id="result"></h2>
+<div class="card">
+
+<div class="title">⚡ 手速挑战赛</div>
+<div class="sub">变绿后立刻点击，看看你能击败多少人</div>
+
+<div class="stats">
+<div class="item">
+<div class="num" id="best">--</div>
+<div class="label">最佳成绩</div>
+</div>
+<div class="item">
+<div class="num" id="count">0</div>
+<div class="label">挑战次数</div>
+</div>
+<div class="item">
+<div class="num" id="rank">--</div>
+<div class="label">全国排名</div>
+</div>
+</div>
+
+<div id="game">点击开始</div>
+
+<div id="msg">准备好了吗？</div>
+<div id="desc">很多人都低估了这个游戏 😏</div>
+
+<div class="btns">
+<button class="main" onclick="startGame()">开始挑战</button>
+<button class="sec" onclick="shareResult()">分享到朋友圈</button>
+</div>
+
+<div class="tip">据说低于200ms的人非常少 👀</div>
+
+</div>
 
 <script>
-let startTime;
-let timeout;
-let ready = false;
+let waiting=false;
+let ready=false;
+let startTime=0;
+let timer=null;
 
-const box = document.getElementById("box");
-const result = document.getElementById("result");
+let best=localStorage.getItem("cn_best");
+let count=localStorage.getItem("cn_count") || 0;
 
-box.onclick = () => {
-  if (!ready) {
-    result.textContent = "Wait for green...";
-    box.style.backgroundColor = "red";
+update();
 
-    timeout = setTimeout(() => {
-      box.style.backgroundColor = "green";
-      startTime = new Date().getTime();
-      ready = true;
-    }, Math.random() * 3000 + 2000);
-  } else {
-    const reactionTime = new Date().getTime() - startTime;
-    result.textContent = `Your reaction time: ${reactionTime} ms`;
+function update(){
+document.getElementById("best").textContent = best ? best+"ms" : "--";
+document.getElementById("count").textContent = count;
+}
 
-    ready = false;
-    box.style.backgroundColor = "red";
-  }
-};
+function startGame(){
+clearTimeout(timer);
+waiting=true;
+ready=false;
+
+const game=document.getElementById("game");
+game.style.background="#ff4d4f";
+game.innerHTML="等待变绿...";
+document.getElementById("msg").innerHTML="别抢点";
+document.getElementById("desc").innerHTML="集中注意力";
+
+timer=setTimeout(()=>{
+ready=true;
+startTime=Date.now();
+game.style.background="#10b981";
+game.innerHTML="快点我！";
+document.getElementById("msg").innerHTML="现在！";
+document.getElementById("desc").innerHTML="立刻点击";
+},Math.random()*2500+1500);
+}
+
+document.getElementById("game").onclick=function(){
+
+const game=this;
+
+if(waiting && !ready){
+clearTimeout(timer);
+waiting=false;
+game.style.background="#111";
+game.innerHTML="抢跑了";
+document.getElementById("msg").innerHTML="❌ 太心急";
+document.getElementById("desc").innerHTML="等变绿再点";
+return;
+}
+
+if(ready){
+let score=Date.now()-startTime;
+waiting=false;
+ready=false;
+count++;
+localStorage.setItem("cn_count",count);
+
+if(!best || score < best){
+best=score;
+localStorage.setItem("cn_best",score);
+}
+
+let percent=Math.max(1,Math.min(99,Math.floor((500-score)/3)));
+document.getElementById("rank").innerHTML="前"+percent+"%";
+
+let title="普通选手";
+if(score<180) title="⚡ 天选之手";
+else if(score<220) title="🔥 手速大神";
+else if(score<260) title="😎 高手";
+else if(score<320) title="🙂 还不错";
+else title="🐢 再练练";
+
+game.style.background="#6366f1";
+game.innerHTML=score+"ms";
+
+document.getElementById("msg").innerHTML=title;
+document.getElementById("desc").innerHTML=
+"你击败了 <b>"+percent+"%</b> 的玩家<br>朋友能超过你吗？";
+
+update();
+}
+}
+
+function shareResult(){
+
+let score=document.getElementById("game").innerText;
+let text="⚡ 我刚测出 "+score+"！你能超过我吗？\n"+location.href;
+
+if(navigator.share){
+navigator.share({
+title:"手速挑战赛",
+text:text,
+url:location.href
+});
+}else{
+navigator.clipboard.writeText(text);
+alert("已复制分享文案，发到朋友圈试试！");
+}
+}
 </script>
 
 </body>
