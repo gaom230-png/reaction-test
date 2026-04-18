@@ -1,508 +1,263 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
-<title>Reaction Test V12.6.3</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>Reaction Test V12.6.4 Full Fit Final</title>
 
 <style>
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
--webkit-tap-highlight-color:transparent;
-font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
+html,body{
+  width:100%;
+  height:100%;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:#dfe0e8;
+  overflow:hidden;
+}
+
+/* ===== ONLY FULL FIT LAYOUT FIX ===== */
 body{
-background:#eef0f6;
-display:flex;
-justify-content:center;
-padding:14px;
-color:#111;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
 }
 
 .app{
-width:100%;
-max-width:760px;
-background:#ffffff;
-border-radius:30px;
-padding:18px;
-box-shadow:0 12px 30px rgba(0,0,0,.05);
+  width:100%;
+  max-width:760px;
+  height:100vh;
+  background:#f5f5f7;
+  overflow:hidden;
+  padding:14px;
 }
 
-select{
-width:100%;
-border:2px solid #e6e6e6;
-border-radius:22px;
-padding:18px 20px;
-font-size:20px;
-background:#fff;
-outline:none;
-margin-bottom:18px;
+/* language */
+.top-select{
+  width:100%;
+  height:52px;
+  border-radius:18px;
+  border:2px solid #e6e6e6;
+  padding:0 18px;
+  font-size:18px;
+  background:#fff;
+  margin-bottom:12px;
 }
 
-.topbar{
-background:#ece2c8;
-border-radius:22px;
-padding:20px;
-text-align:center;
-font-size:20px;
-font-weight:800;
-margin-bottom:18px;
+/* banner */
+.banner{
+  width:100%;
+  height:64px;
+  border-radius:22px;
+  background:#e7ddbf;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  font-weight:800;
+  margin-bottom:14px;
 }
 
+/* title */
 h1{
-font-size:72px;
-line-height:1.05;
-text-align:center;
-font-weight:900;
-letter-spacing:-1px;
-margin-top:6px;
+  font-size:52px;
+  text-align:center;
+  font-weight:900;
+  line-height:1.05;
 }
 
 .sub{
-text-align:center;
-font-size:22px;
-font-weight:700;
-color:#777;
-margin:14px 0 22px;
+  text-align:center;
+  color:#888;
+  font-size:22px;
+  margin-top:10px;
+  margin-bottom:16px;
+  font-weight:700;
 }
 
+/* stats */
 .stats{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:14px;
-margin-bottom:18px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+  margin-bottom:14px;
 }
 
 .card{
-background:#f3f4fb;
-border-radius:24px;
-padding:18px 8px;
-text-align:center;
+  background:#ececf4;
+  border-radius:24px;
+  height:132px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
 }
 
-.num{
-font-size:74px;
-font-weight:900;
-line-height:1;
+.big{
+  font-size:62px;
+  font-weight:900;
+  line-height:1;
 }
 
-.label{
-margin-top:10px;
-font-size:18px;
-font-weight:700;
-color:#666;
+.small{
+  margin-top:8px;
+  font-size:22px;
+  color:#666;
+  font-weight:700;
 }
 
+/* arena */
 .arena{
-height:430px;
-background:#f3f4fb;
-border-radius:30px;
-position:relative;
-overflow:hidden;
-margin-bottom:18px;
+  width:100%;
+  height:420px;
+  border-radius:34px;
+  background:#ececf4;
+  position:relative;
+  overflow:hidden;
+  margin-bottom:14px;
 }
 
+/* target */
 .target{
-width:180px;
-height:180px;
-background:#ff5353;
-border-radius:28px;
-position:absolute;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%);
-display:flex;
-justify-content:center;
-align-items:center;
-font-size:34px;
-font-weight:900;
-color:#fff;
-cursor:pointer;
-user-select:none;
-transition:.15s;
+  width:116px;
+  height:116px;
+  border-radius:26px;
+  background:#ff5252;
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  transition:all .18s ease;
 }
 
-.green{background:#25c47b;}
-.blue{background:#4280ff;}
-.orange{background:#ff9d33;}
+.target.green{ background:#25c27a; }
+.target.blue{ background:#4d82ff; }
+.target.orange{ background:#ff9d32; }
 
-.mainBtn{
-width:100%;
-border:none;
-background:#000;
-color:#fff;
-font-size:34px;
-font-weight:900;
-padding:24px;
-border-radius:26px;
-cursor:pointer;
+/* button */
+.main-btn{
+  width:100%;
+  height:86px;
+  border:none;
+  border-radius:28px;
+  background:#000;
+  color:#fff;
+  font-size:34px;
+  font-weight:900;
+  cursor:pointer;
 }
 
-.mainBtn:active{
-transform:scale(.99);
+/* smaller screens */
+@media (max-width:700px){
+
+  .app{
+    padding:10px;
+  }
+
+  .top-select{
+    height:46px;
+    font-size:16px;
+    margin-bottom:10px;
+  }
+
+  .banner{
+    height:58px;
+    font-size:16px;
+    margin-bottom:10px;
+  }
+
+  h1{
+    font-size:34px;
+  }
+
+  .sub{
+    font-size:16px;
+    margin-top:6px;
+    margin-bottom:10px;
+  }
+
+  .stats{
+    gap:8px;
+    margin-bottom:10px;
+  }
+
+  .card{
+    height:100px;
+    border-radius:20px;
+  }
+
+  .big{
+    font-size:38px;
+  }
+
+  .small{
+    font-size:14px;
+    margin-top:4px;
+  }
+
+  .arena{
+    height:300px;
+    border-radius:24px;
+    margin-bottom:10px;
+  }
+
+  .target{
+    width:96px;
+    height:96px;
+    border-radius:22px;
+  }
+
+  .main-btn{
+    height:68px;
+    font-size:22px;
+    border-radius:22px;
+  }
 }
 
-@media(max-width:700px){
-
-body{
-padding:10px;
-}
-
-.app{
-padding:16px;
-border-radius:26px;
-}
-
-select{
-font-size:18px;
-padding:16px;
-}
-
-.topbar{
-font-size:18px;
-padding:18px;
-}
-
-h1{
-font-size:42px;
-}
-
-.sub{
-font-size:16px;
-margin:10px 0 16px;
-}
-
-.stats{
-gap:10px;
-}
-
-.card{
-padding:14px 6px;
-border-radius:20px;
-}
-
-.num{
-font-size:48px;
-}
-
-.label{
-font-size:14px;
-margin-top:8px;
-}
-
-.arena{
-height:360px;
-border-radius:24px;
-}
-
-.target{
-width:130px;
-height:130px;
-font-size:28px;
-border-radius:24px;
-}
-
-.mainBtn{
-font-size:26px;
-padding:20px;
-border-radius:22px;
-}
-}
 </style>
 </head>
 
 <body>
+
 <div class="app">
 
-<select>
-<option>中文（简体）</option>
-<option>English</option>
-<option>日本語</option>
-<option>한국어</option>
-<option>廣東話</option>
+<select class="top-select">
+  <option>中文（简体）</option>
 </select>
 
-<div class="topbar" id="peopleBar">🔥 今日已有 29,780 人挑战中...</div>
+<div class="banner">🔥 Today 29,783 players are challenging...</div>
 
-<!-- 已修改标题 -->
-<h1>最近休息到位吗</h1>
-
-<div class="sub">测测你的反应速度</div>
+<h1>Recently Rested Enough?</h1>
+<div class="sub">Test your reaction speed</div>
 
 <div class="stats">
-<div class="card">
-<div class="num" id="levelNum">1</div>
-<div class="label">关卡</div>
-</div>
+  <div class="card">
+    <div class="big">1</div>
+    <div class="small">Stage</div>
+  </div>
 
-<div class="card">
-<div class="num" id="scoreNum">0</div>
-<div class="label">积分</div>
-</div>
+  <div class="card">
+    <div class="big">0</div>
+    <div class="small">Score</div>
+  </div>
 
-<div class="card">
-<div class="num" id="rankNum">--</div>
-<div class="label">全球排名</div>
-</div>
+  <div class="card">
+    <div class="big">--</div>
+    <div class="small">Global Rank</div>
+  </div>
 </div>
 
 <div class="arena">
-
-<!-- 已移除开始文字 -->
-<div class="target" id="target"></div>
-
+  <div class="target"></div>
 </div>
 
-<button class="mainBtn" onclick="startGame()">开始挑战</button>
+<button class="main-btn">Start Challenge</button>
 
 </div>
-
-<script>
-let level=1;
-let score=0;
-let people=29780;
-let startTime=0;
-let stageTimes=[0,0,0,0];
-
-const levelNum=document.getElementById("levelNum");
-const scoreNum=document.getElementById("scoreNum");
-const rankNum=document.getElementById("rankNum");
-const target=document.getElementById("target");
-const peopleBar=document.getElementById("peopleBar");
-
-setInterval(()=>{
-people+=Math.floor(Math.random()*3)+1;
-peopleBar.innerHTML="🔥 今日已有 "+people.toLocaleString()+" 人挑战中...";
-},3000);
-
-function updateUI(){
-levelNum.innerText=level;
-scoreNum.innerText=score;
-}
-
-function centerBox(){
-target.style.left="50%";
-target.style.top="50%";
-target.style.transform="translate(-50%,-50%)";
-}
-
-function resetBox(){
-target.className="target";
-target.style.display="flex";
-target.style.width=window.innerWidth<700?"130px":"180px";
-target.style.height=window.innerWidth<700?"130px":"180px";
-target.innerHTML="";
-target.onclick=null;
-centerBox();
-}
-
-function startGame(){
-level=1;
-score=0;
-stageTimes=[0,0,0,0];
-rankNum.innerText="--";
-updateUI();
-showStageIntro();
-}
-
-function showStageIntro(){
-resetBox();
-
-target.innerHTML=
-"<div style='text-align:center'>" +
-"<div style='font-size:34px;font-weight:900'>第 "+level+" 关</div>" +
-"<div style='font-size:16px;margin-top:8px'>准备开始</div>" +
-"</div>";
-
-setTimeout(runStage,900);
-}
-
-function showResult(ms,nextFn){
-target.className="target green";
-centerBox();
-
-target.innerHTML=
-"<div style='text-align:center'>" +
-"<div style='font-size:32px;font-weight:900'>"+ms+" ms</div>" +
-"<div style='font-size:16px;margin-top:8px'>完成</div>" +
-"</div>";
-
-setTimeout(nextFn,850);
-}
-
-function runStage(){
-
-resetBox();
-
-if(level===1){
-
-setTimeout(()=>{
-target.classList.add("green");
-target.innerText="点击";
-startTime=Date.now();
-
-target.onclick=()=>{
-let rt=Date.now()-startTime;
-stageTimes[0]=rt;
-score+=Math.max(300-rt,60);
-updateUI();
-
-showResult(rt,()=>{
-level=2;
-updateUI();
-showStageIntro();
-});
-};
-
-},800+Math.random()*1200);
-}
-
-else if(level===2){
-
-target.style.display="none";
-
-setTimeout(()=>{
-target.style.display="flex";
-target.classList.add("blue");
-target.innerText="抓住";
-
-target.style.left="-120px";
-target.style.top="50%";
-target.style.transform="translateY(-50%)";
-
-let pos=-120;
-startTime=Date.now();
-
-let timer=setInterval(()=>{
-pos+=8;
-target.style.left=pos+"px";
-if(pos>900) clearInterval(timer);
-},16);
-
-target.onclick=()=>{
-clearInterval(timer);
-let rt=Date.now()-startTime;
-stageTimes[1]=rt;
-score+=220;
-updateUI();
-
-showResult(rt,()=>{
-level=3;
-updateUI();
-showStageIntro();
-});
-};
-
-},450);
-}
-
-else if(level===3){
-
-target.classList.add("orange");
-
-let hit=3;
-let st=Date.now();
-
-target.innerText="连点3次";
-
-target.onclick=()=>{
-hit--;
-
-if(hit>0){
-target.innerText="剩余 "+hit;
-}else{
-let rt=Date.now()-st;
-stageTimes[2]=rt;
-score+=260;
-updateUI();
-
-showResult(rt,()=>{
-level=4;
-updateUI();
-showStageIntro();
-});
-}
-};
-}
-
-else if(level===4){
-
-target.style.display="none";
-
-setTimeout(()=>{
-
-target.style.display="flex";
-target.classList.add("green");
-target.innerText="抓住";
-
-target.style.left="0px";
-target.style.top="0px";
-target.style.transform="none";
-
-let x=0;
-let y=0;
-
-startTime=Date.now();
-
-let timer=setInterval(()=>{
-x+=7;
-y+=5;
-target.style.left=x+"px";
-target.style.top=y+"px";
-
-if(x>560) clearInterval(timer);
-
-},16);
-
-target.onclick=()=>{
-clearInterval(timer);
-
-let rt=Date.now()-startTime;
-stageTimes[3]=rt;
-
-score+=350;
-updateUI();
-
-finishGame();
-};
-
-},500);
-}
-}
-
-function finishGame(){
-
-let beat=Math.min(99.9,(70+score/18)).toFixed(1);
-let rank=Math.max(1,Math.floor(people*(100-beat)/100));
-
-rankNum.innerText="#"+rank.toLocaleString();
-
-target.className="target green";
-target.style.width="230px";
-target.style.height="230px";
-centerBox();
-
-target.innerHTML=
-"<div style='text-align:center;line-height:1.5;padding:6px'>" +
-"<div style='font-size:26px'>🏆</div>" +
-"<div style='font-size:24px;font-weight:900'>挑战成功</div>" +
-"<div style='font-size:14px;margin-top:6px'>S1 "+stageTimes[0]+"ms</div>" +
-"<div style='font-size:14px'>S2 "+stageTimes[1]+"ms</div>" +
-"<div style='font-size:14px'>S3 "+stageTimes[2]+"ms</div>" +
-"<div style='font-size:14px'>S4 "+stageTimes[3]+"ms</div>" +
-"<div style='font-size:15px;margin-top:6px'>全球排名 #"+rank.toLocaleString()+"</div>" +
-"<div style='font-size:14px'>超过全球 "+beat+"% 玩家</div>" +
-"</div>";
-
-target.onclick=startGame;
-}
-
-updateUI();
-resetBox();
-</script>
 
 </body>
 </html>
